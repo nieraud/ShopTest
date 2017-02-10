@@ -1,0 +1,4 @@
+Host: smtp.gmail.com
+Use Authentication: Yes
+Port for TLS/STARTTLS: 587
+Port for SSL: 465
