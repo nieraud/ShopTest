@@ -18,6 +18,7 @@
             <version>2.5</version>
         </dependency>
 
+        <!-- Thymeleaf (renders objects to HTML) -->
         <dependency>
             <groupId>com.sparkjava</groupId>
             <artifactId>spark-template-thymeleaf</artifactId>

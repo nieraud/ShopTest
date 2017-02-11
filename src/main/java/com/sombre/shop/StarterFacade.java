@@ -10,6 +10,7 @@ public class StarterFacade {
 
     public static void start() {
 
+        //initExceptionService();
         initRoutingService();
 
 

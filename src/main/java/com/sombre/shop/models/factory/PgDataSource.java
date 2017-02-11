@@ -12,7 +12,9 @@ public class PgDataSource extends AbstractDaoFactory implements DataSource {
     private volatile static PgDataSource dataSource;
     private Sql2o sql2o;
 
-    private PgDataSource() { }
+    private PgDataSource() {
+
+    }
 
     public static PgDataSource getInstance() {
         if (dataSource == null) {
