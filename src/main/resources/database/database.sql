@@ -22,8 +22,8 @@ CREATE TABLE users (
 );
 
 
-DROP TABLE IF EXISTS admin CASCADE;
-CREATE TABLE admin (
+DROP TABLE IF EXISTS admins CASCADE;
+CREATE TABLE admins (
   uniqueId        UUID         NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   id_user         UUID         NOT NULL REFERENCES users (uniqueId),
   degree          degree_admin NOT NULL,
@@ -38,19 +38,19 @@ CREATE TABLE sendemail (
   status   BOOLEAN        NOT NULL DEFAULT FALSE
 );
 
-DROP TABLE IF EXISTS category CASCADE;
-CREATE TABLE category (
+DROP TABLE IF EXISTS categories CASCADE;
+CREATE TABLE categories (
   uniqueId    UUID        NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   name        VARCHAR(30) NOT NULL,
   description TEXT                 DEFAULT NULL
 );
 
-DROP TABLE IF EXISTS subcategory CASCADE;
-CREATE TABLE subcategory (
+DROP TABLE IF EXISTS subcategories CASCADE;
+CREATE TABLE subcategories (
   uniqueId       UUID        NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   name           VARCHAR(30) NOT NULL,
   description    TEXT                 DEFAULT NULL,
-  id_subcategory UUID        NOT NULL REFERENCES subcategory (uniqueId)
+  id_subcategory UUID        NOT NULL REFERENCES categories (uniqueId)
 );
 
 
@@ -63,7 +63,7 @@ CREATE TABLE products (
   price       INTEGER     NOT NULL,
   instock     BOOLEAN     NOT NULL DEFAULT FALSE,
   dateadded   TIMESTAMP   NOT NULL DEFAULT now(),
-  id_category UUID REFERENCES category (uniqueId)
+  id_subcategory UUID REFERENCES subcategories (uniqueId)
 );
 
 DROP TABLE IF EXISTS basket CASCADE;
