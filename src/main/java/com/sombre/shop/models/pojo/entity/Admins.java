@@ -13,6 +13,6 @@ import java.util.UUID;
 public class Admins {
     private UUID uniqueId;
     private UUID id_user;
-    private char degree;
+    private int degree;
     private String roledescription;
 }

@@ -1,8 +1,11 @@
 package com.sombre.shop.models.services.adminService;
 
 import com.sombre.shop.models.factory.AbstractDaoFactory;
+import com.sombre.shop.models.pojo.dto.admin.NewAdmin;
 import com.sombre.shop.models.repositories.adminRepository.AdminRepository;
 import com.sombre.shop.models.services.UserAbstractDaoService;
+
+import java.util.UUID;
 
 /**
  * Created by inna on 11.02.17.
@@ -10,5 +13,10 @@ import com.sombre.shop.models.services.UserAbstractDaoService;
 public class AdminDaoService extends UserAbstractDaoService implements AdminRepository {
     public AdminDaoService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
+    }
+
+    @Override
+    public boolean addAdmin(UUID userID, NewAdmin newAdmin) {
+        return false;
     }
 }

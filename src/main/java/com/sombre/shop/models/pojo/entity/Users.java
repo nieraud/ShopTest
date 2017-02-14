@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.joda.time.DateTime;
 
+import java.sql.Date;
 import java.util.UUID;
 
 /**
@@ -15,7 +16,7 @@ public class Users {
     private UUID uniqueId;
     private String firstname;
     private String lastname;
-    private DateTime birthday;
+    private Date birthday;
     private int phonenumber;
     private DateTime dateReg;
     private String useremail;

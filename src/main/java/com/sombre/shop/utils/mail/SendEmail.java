@@ -1,14 +1,11 @@
 package com.sombre.shop.utils.mail;
 
-import model.pojo.entity.Post;
-import model.pojo.entity.User;
-
 /**
- * Created by User on 25.11.2016.
+ * Created by inna on 12.02.17.
  */
 public class SendEmail {
 
-    private static Sender tlsSender = new Sender("inusinka20@gmail.com", "zbochiniashka12");
+   /* private static Sender tlsSender = new Sender("inusinka20@gmail.com", "zbochiniashka12");
 
     public static boolean sendGmail(Post post, String usernameAuthorPost, User user) {
         try {
@@ -18,5 +15,5 @@ public class SendEmail {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
 }

@@ -6,11 +6,11 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 /**
- * Created by User on 24.11.2016.
+ * Created by inna on 12.02.17.
  */
 public class Sender {
 
-    private String username;
+   /* private String username;
     private String password;
     private Properties props;
 
@@ -48,5 +48,6 @@ public class Sender {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-    }
+
+    }*/
 }
