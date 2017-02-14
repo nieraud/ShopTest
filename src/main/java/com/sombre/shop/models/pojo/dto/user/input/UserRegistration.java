@@ -15,7 +15,7 @@ public class UserRegistration {
     private String firstname;
     private String lastname;
     private String birthday;
-    private int phonenumber;
+    private long phonenumber;
     private String useremail;
     private String password;
 }

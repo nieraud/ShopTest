@@ -1,5 +1,7 @@
 package com.sombre.shop;
 
+import com.sombre.shop.utils.exceptions.ExceptionService;
+import com.sombre.shop.utils.exceptions.ExcetionRouting;
 import com.sombre.shop.utils.routing.Router;
 import com.sombre.shop.utils.routing.Routing;
 
@@ -10,7 +12,7 @@ public class StarterFacade {
 
     public static void start() {
 
-        //initExceptionService();
+        initExceptionService();
         initRoutingService();
 
 
@@ -24,8 +26,8 @@ public class StarterFacade {
 
     private static void initExceptionService() {
 
-        Routing router = new Router();
-        router.init();
+        ExcetionRouting r = new ExceptionService();
+        r.init();
 
     }
 }

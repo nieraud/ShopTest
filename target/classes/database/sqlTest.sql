@@ -2,7 +2,7 @@ INSERT INTO users
 VALUES (DEFAULT,
         'Inna',
         'Rudenko',
-        '1997-09-24',
+        'Wed Sep 24 00:00:00 EEST 1997',
         380969635486,
         DEFAULT,
         'inusinka20@gmail.com',
@@ -12,16 +12,15 @@ VALUES (DEFAULT,
 
 CREATE TABLE test (
   id   UUID        NOT NULL DEFAULT uuid_generate_v4(),
-  firstname      VARCHAR(20) NOT NULL
-    CONSTRAINT first_name_check CHECK (firstname ~* '^[A-Za-z]{1,20}$'),
-  name VARCHAR(80) NOT NULL UNIQUE
-    CONSTRAINT username_check CHECK (name ~*
-                                     '^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$')
+  date DATE DEFAULT NULL
 );
 
-DELETE from users where uniqueid ='ce79be58-6213-432d-ae11-55e56a4609ad';
+DELETE FROM users;
 
-INSERT INTO test
-VALUES (DEFAULT ,'i9L','ijj@gmail.com');
+SELECT * from users;
 
-select * from users;
+drop TABLE test;
+
+INSERT INTO test VALUES (DEFAULT , '1997-09-24');
+
+

@@ -4,7 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.joda.time.DateTime;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 /**
  * Created by inna on 12.02.17.
@@ -14,9 +15,9 @@ import java.sql.Date;
 public class UserForAddingToDB {
     private String firstname;
     private String lastname;
-    private DateTime birthday;
-    private int phonenumber;
+    private Date birthday;
+    private long phonenumber;
     private String useremail;
-    private String hashpassword;
-    private String encryptionsalt;
+    private byte[] hashpassword;
+    private byte[] encryptionsalt;
 }

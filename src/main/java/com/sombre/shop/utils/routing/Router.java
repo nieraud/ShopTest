@@ -13,7 +13,7 @@ public class Router implements Routing {
     public void init() {
 
         // User's part
-        post(Path.REGISTRATION, UserAndAdminCtrl.getRegistrationUser());
+        post("/user/new", UserAndAdminCtrl.getRegistrationUser());
         post(Path.AUTHORIZATION, UserAndAdminCtrl.getAuthorization());
         post(Path.UPDATE_USER, UserAndAdminCtrl.getUpdateUser());
         get(Path.GET_USER, UserAndAdminCtrl.getUserById());

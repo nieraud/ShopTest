@@ -6,15 +6,15 @@ import com.sombre.shop.models.pojo.dto.user.input.UserRegistration;
 import com.sombre.shop.models.pojo.dto.user.input.returnPassAndSalt.HashPasswordAndSalt;
 import com.sombre.shop.models.pojo.dto.user.output.UserForAddingToDB;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
-import com.sombre.shop.utils.dateTimeParser.DateTimeParser;
 import com.sombre.shop.utils.security.UserSecurity;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
-import lombok.NonNull;
 import org.eclipse.jetty.http.HttpStatus;
-import org.joda.time.DateTime;
-import org.sql2o.Sql2oException;
 import spark.Route;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by inna on 11.02.17.
@@ -35,23 +35,22 @@ public class UserAndAdminCtrl {
 
         HashPasswordAndSalt security = UserSecurity.generateHashPassword(user.getPassword());
 
-        DateTime date = DateTimeParser.parse(user.getBirthday(), "yyyy-MM-dd");
-
         UserForAddingToDB endingUser = new UserForAddingToDB(user.getFirstname(),
                 user.getLastname(),
-                date,
+                new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday()),
                 user.getPhonenumber(),
                 user.getUseremail(),
-                security.getPassword(),
-                security.getSalt());
-        ObjectConverterValidator.nullChecker(endingUser);
+                security.getPassword().getBytes(),
+                security.getSalt().getBytes());
 
         if (userDaoService.registration(endingUser)) {
 
             response.status(HttpStatus.OK_200);
+            response.body("application/json");
             return "true";
 
-        } else throw new Sql2oException();
+        } else return "fail";
+
 
     };
 
@@ -75,7 +74,6 @@ public class UserAndAdminCtrl {
 
     @Getter
     private static final Route updateUser = (request, response) -> {
-
         return "";
     };
 

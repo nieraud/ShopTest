@@ -7,6 +7,8 @@ import spark.ExceptionHandler;
 import spark.Request;
 import spark.Response;
 
+import java.text.ParseException;
+
 /**
  * Created by inna on 14.02.17.
  */
@@ -22,9 +24,23 @@ public class Handler implements ExceptionHandler {
 
         Sql2oException exception = (Sql2oException) e;
         response.body(exception.getMessage());
-        response.body("application/json");
+        //response.body("application/json");
 
         System.out.println("Sql2oException");
 
     });
+
+    @Getter
+    private static final ExceptionHandler parseException = ((e, request, response) -> {
+
+        ParseException exception = (ParseException) e;
+        response.body(exception.getMessage());
+        //response.body("application/json");
+
+        System.out.println("ParseException");
+
+    });
+
+
+
 }
