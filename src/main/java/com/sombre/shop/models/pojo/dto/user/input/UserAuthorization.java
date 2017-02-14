@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class AuthUser {
+public class UserAuthorization {
     private String useremail;
     private String password;
 }

@@ -20,8 +20,8 @@ public class Users {
     private int phonenumber;
     private DateTime dateReg;
     private String useremail;
-    private String hashpassword;
-    private String encryptionsalt;
-    private String accesstoken;
+    private byte[] hashpassword;
+    private byte[] encryptionsalt;
+    private byte[] accesstoken;
 
 }

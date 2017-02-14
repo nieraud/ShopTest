@@ -2,9 +2,11 @@ package com.sombre.shop.controllers.userAndAdminCtrl;
 
 import com.google.gson.Gson;
 import com.sombre.shop.models.factory.DaoServiceFactory;
+import com.sombre.shop.models.pojo.dto.user.input.UserAuthorization;
 import com.sombre.shop.models.pojo.dto.user.input.UserRegistration;
 import com.sombre.shop.models.pojo.dto.user.input.returnPassAndSalt.HashPasswordAndSalt;
 import com.sombre.shop.models.pojo.dto.user.output.UserForAddingToDB;
+import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
 import com.sombre.shop.utils.security.UserSecurity;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
@@ -12,9 +14,7 @@ import lombok.Getter;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by inna on 11.02.17.
@@ -46,29 +46,35 @@ public class UserAndAdminCtrl {
         if (userDaoService.registration(endingUser)) {
 
             response.status(HttpStatus.OK_200);
-            response.body("application/json");
-            return "true";
-
-        } else return "fail";
-
-
+            response.type("application/json");
+            return response;
+        } else throw new Exception();
     };
 
     @Getter
     private static final Route authorization = (request, response) -> {
 
-        /*AuthUser user = gson.fromJson(request.body(), AuthUser.class);
-        Users userFromDB = userDaoService.getUserByUserEmail(new UserIdentification(user.getUsername()));
+        UserAuthorization user = gson.fromJson(request.body(), UserAuthorization.class);
+        ObjectConverterValidator.nullChecker(user);
 
-        boolean state = BCrypt.checkpw(user.getPassword(), userFromDb.getHashPassword());
+        Users userFromDB = userDaoService.getUserByUserEmail(user.getUseremail());
+        ObjectConverterValidator.nullChecker(userFromDB);
 
-        if (state) {
-            String accessToken = UserSecurity.Hasher.generateAccessToken(userFromDb);
-            userService.userAuth(accessToken, userFromDb);
+        if (UserSecurity.checkPassword(user.getPassword(), userFromDB.getHashpassword())) {
+
+            String accessToken = userDaoService.getAccessTokenByUserId(userFromDB.getUniqueId());
+
+            if (accessToken == null) {
+
+                accessToken = UserSecurity.generateAccessToken(userFromDB);
+                userDaoService.userAuthorization(accessToken, userFromDB.getUniqueId());
+            }
+
             response.header("AccessToken", accessToken);
-            return gson.toJson("authorization=OK");
-        }*/
-        return "Authorization Failed";
+            response.status(HttpStatus.OK_200);
+            response.type("application/json");
+            return response;
+        } else throw new Exception();
     };
 
 
