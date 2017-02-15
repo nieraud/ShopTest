@@ -1,5 +1,6 @@
 package com.sombre.shop.models.factory;
 
+import com.sombre.shop.models.repositories.adminRepository.AdminRepository;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
 import org.sql2o.Sql2o;
 
@@ -11,7 +12,11 @@ public class DaoServiceFactory extends AbstractDaoFactory {
         return AbstractDaoFactory.getInstace().getDataSource();
     }
 
-    public static UserRepository getUserService(){
+    public static UserRepository getUserService() {
         return DAO_SERVICE.USER_REPOSITORY;
+    }
+
+    public static AdminRepository getAdminService() {
+        return DAO_SERVICE.ADMIN_REPOSITORY;
     }
 }

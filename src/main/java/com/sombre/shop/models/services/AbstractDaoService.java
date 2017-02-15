@@ -6,10 +6,10 @@ import org.sql2o.Sql2o;
 /**
  * Created by inna on 11.02.17.
  */
-public class UserAbstractDaoService {
+public class AbstractDaoService {
     protected AbstractDaoFactory daoFactory;
 
-    public UserAbstractDaoService(AbstractDaoFactory daoFactory ) {
+    public AbstractDaoService(AbstractDaoFactory daoFactory ) {
         this.daoFactory = daoFactory;
     }
 }

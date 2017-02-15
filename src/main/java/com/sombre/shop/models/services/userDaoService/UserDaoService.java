@@ -1,30 +1,23 @@
 package com.sombre.shop.models.services.userDaoService;
 
 import com.sombre.shop.models.factory.AbstractDaoFactory;
+import com.sombre.shop.models.pojo.dto.user.input.UserUpdate;
 import com.sombre.shop.models.pojo.dto.user.output.UserForAddingToDB;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
-import com.sombre.shop.models.services.UserAbstractDaoService;
-import lombok.NonNull;
-import org.joda.time.DateTime;
+import com.sombre.shop.models.services.AbstractDaoService;
 import org.sql2o.Connection;
 import org.sql2o.Sql2oException;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by inna on 11.02.17.
  */
-public class UserDaoService extends UserAbstractDaoService implements UserRepository {
-
+public class UserDaoService extends AbstractDaoService implements UserRepository {
     public UserDaoService(AbstractDaoFactory daoFactory) {
         super(daoFactory);
     }
-
 
     @Override
     public boolean registration(UserForAddingToDB user) {
@@ -67,7 +60,7 @@ public class UserDaoService extends UserAbstractDaoService implements UserReposi
     }
 
     @Override
-    public boolean userAuthorization(String accessToken, UUID userID) {
+    public boolean authorization(String accessToken, UUID userID) {
 
         String sql = "UPDATE users SET accesstoken = :token WHERE uniqueid = :id;";
 
@@ -91,9 +84,12 @@ public class UserDaoService extends UserAbstractDaoService implements UserReposi
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
-            return connection.createQuery(sql, false)
+            Users user = connection.createQuery(sql, false)
                     .addParameter("token", token.getBytes())
                     .executeAndFetchFirst(Users.class);
+
+            if (user != null) return user;
+            else return null;
 
         } catch (Sql2oException e) {
             throw new Sql2oException(e);
@@ -118,5 +114,62 @@ public class UserDaoService extends UserAbstractDaoService implements UserReposi
             throw new Sql2oException(e);
         }
     }
+
+    @Override
+    public boolean deleteUser(UUID userId) {
+        String sql = "DELETE FROM users WHERE uniqueid = :id;";
+
+        try (Connection connection = daoFactory.getDataSource().open()) {
+
+            connection.createQuery(sql, false)
+                    .addParameter("id", userId)
+                    .executeUpdate();
+            return true;
+
+        } catch (Sql2oException e) {
+            throw new Sql2oException(e);
+        }
+    }
+
+    @Override
+    public boolean updateUser(UserUpdate user) {
+        String sql = "UPDATE users SET (firstname, lastname, birthday, phonenumber) = " +
+                "(:firstname, :lastname, :birthday, :phonenumber) " +
+                "WHERE uniqueid = :id;";
+
+        try (Connection connection = daoFactory.getDataSource().open()) {
+
+            connection.createQuery(sql, false)
+                    .addParameter("firstname", user.getFirstname())
+                    .addParameter("lastname", user.getLastname())
+                    .addParameter("birthday", user.getBirthday())
+                    .addParameter("phonenumber", user.getPhonenumber())
+                    .executeUpdate();
+            return true;
+
+        } catch (Sql2oException e) {
+            throw new Sql2oException(e);
+        }
+    }
+
+    @Override
+    public Users getUserById(UUID userId) {
+
+        String sql = "SELECT * FROM users WHERE uniqueid = :id;";
+
+        try (Connection connection = daoFactory.getDataSource().open()) {
+
+            Users user = connection.createQuery(sql, false)
+                    .addParameter("id", userId)
+                    .executeAndFetchFirst(Users.class);
+
+            if (user != null) return user;
+            else return null;
+
+        } catch (Sql2oException e) {
+            throw new Sql2oException(e);
+        }
+    }
+
 
 }

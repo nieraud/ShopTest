@@ -6,6 +6,7 @@ import org.sql2o.Sql2oException;
 import spark.ExceptionHandler;
 import spark.Request;
 import spark.Response;
+import spark.Route;
 
 import java.text.ParseException;
 
@@ -16,17 +17,30 @@ public class Handler implements ExceptionHandler {
 
     @Override
     public void handle(Exception e, Request request, Response response) {
-
     }
+
+
+    @Getter
+    private static final Route notFound = (request, response) -> {
+        response.type("application/json");
+        return "{\"message\":\"Custom 404\"}";
+    };
+
+    @Getter
+    private static final Route internalServerError = (request, response) -> {
+        response.type("application/json");
+        return "{\"message\":\"Custom 500 handling\"}";
+    };
+
 
     @Getter
     private static final ExceptionHandler sql2oException = ((e, request, response) -> {
 
         Sql2oException exception = (Sql2oException) e;
-        response.body(exception.getMessage());
-        //response.body("application/json");
+        response.body("Sql2oException");
+        //response.type("application/json");
 
-        System.out.println("Sql2oException");
+        System.out.println(exception.getMessage());
 
     });
 
@@ -34,13 +48,12 @@ public class Handler implements ExceptionHandler {
     private static final ExceptionHandler parseException = ((e, request, response) -> {
 
         ParseException exception = (ParseException) e;
-        response.body(exception.getMessage());
-        //response.body("application/json");
+        response.body("ParseException");
+        //response.type("application/json");
 
-        System.out.println("ParseException");
+        System.out.println(exception.getMessage());
 
     });
-
 
 
 }

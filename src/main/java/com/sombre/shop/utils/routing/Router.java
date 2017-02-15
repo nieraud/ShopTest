@@ -1,10 +1,10 @@
 package com.sombre.shop.utils.routing;
 
-import com.sombre.shop.controllers.userAndAdminCtrl.UserAndAdminCtrl;
-import com.sombre.shop.utils.path.Path;
+import com.sombre.shop.controllers.filters.BeforeFilter;
+import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
+import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 /**
  * Created by inna on 08.02.17.
@@ -12,20 +12,29 @@ import static spark.Spark.post;
 public class Router implements Routing {
     public void init() {
 
-        // User's part
-        post(Path.REGISTRATION, UserAndAdminCtrl.getRegistrationUser());
-        post(Path.AUTHORIZATION, UserAndAdminCtrl.getAuthorization());
-        post(Path.UPDATE_USER, UserAndAdminCtrl.getUpdateUser());
-        get(Path.GET_USER, UserAndAdminCtrl.getUserById());
-        post(Path.DELETE_USER, UserAndAdminCtrl.getDeleteUser());
+        post("/admins/auth", AdminsCtrl.getAuthorizationAdmin());
 
-        // Admin's part
-        post(Path.ADD_ADMIN, UserAndAdminCtrl.getAddAdmin());
-        post(Path.AUTHORIZATION_ADMIN, UserAndAdminCtrl.getAuthorizationAdmin());
-        post(Path.UPDATE_ADMIN, UserAndAdminCtrl.getUpdateAdmin());
-        get(Path.GET_ADMIN, UserAndAdminCtrl.getAdmin());
-        get(Path.GET_ALL_ADMINS, UserAndAdminCtrl.getAllAdmins());
-        post(Path.DELETE_ADMIN, UserAndAdminCtrl.getDeleteAdmin());
+        post("/reg", UsersCtrl.getRegistrationUser());
+        post("/auth", UsersCtrl.getAuthorization());
+
+        before("/sec/*", BeforeFilter.getCheckAuthorization());
+        path("/sec", () -> {
+            before("/admin/*", BeforeFilter.getOwnerChecker());
+            path("/admin", () -> {
+                post("/add", AdminsCtrl.getAddAdmin());
+                post("/upd", AdminsCtrl.getUpdateAdmin());
+                post("/get", AdminsCtrl.getAdmin());
+                get("/all", AdminsCtrl.getAllAdmins());
+                post("/del", AdminsCtrl.getDeleteAdmin());
+            });
+
+            before("/user/*", BeforeFilter.getCheckRealUser());
+            path("/user", () -> {
+                post("/upd", UsersCtrl.getUpdateUser());
+                post("/get", UsersCtrl.getUserById());
+                post("/del", UsersCtrl.getDeleteUser());
+            });
+        });
     }
 
 

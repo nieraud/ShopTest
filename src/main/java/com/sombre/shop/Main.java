@@ -13,11 +13,5 @@ public class Main {
 
         StarterFacade.start();
 
-        //String fullDate = "1997-09-24T00:00:00.000+03:00";
-
-
-
-
-
     }
 }

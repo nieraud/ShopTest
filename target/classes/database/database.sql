@@ -11,7 +11,7 @@ CREATE TABLE users (
   lastname       VARCHAR(30) NOT NULL
     CONSTRAINT second_name_check CHECK (lastname ~* '^[a-zA-Z]{1,30}$'),
   birthday       DATE        NOT NULL,
-  phonenumber    NUMERIC(15) NOT NULL,
+  phonenumber    NUMERIC(15) NOT NULL UNIQUE,
   datereg        TIMESTAMP   NOT NULL DEFAULT now(),
 
   useremail      VARCHAR(80) NOT NULL UNIQUE
