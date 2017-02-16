@@ -1,7 +1,7 @@
 package com.sombre.shop.models.repositories.userRepository;
 
-import com.sombre.shop.models.pojo.dto.user.input.UserUpdate;
-import com.sombre.shop.models.pojo.dto.user.output.UserForAddingToDB;
+import com.sombre.shop.models.pojo.dto.userDto.input.UserUpdateDto;
+import com.sombre.shop.models.pojo.dto.userDto.output.UserForAddingToDBDto;
 import com.sombre.shop.models.pojo.entity.Users;
 
 import java.text.ParseException;
@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 public interface UserRepository {
 
-    boolean registration(UserForAddingToDB user) throws ParseException;
+    boolean registration(UserForAddingToDBDto user) throws ParseException;
     boolean authorization(String accessToken, UUID user);
 
     Users getUserByUserEmail(String userEmail);
@@ -23,7 +23,7 @@ public interface UserRepository {
     String getAccessTokenByUserId(UUID userId);
 
     boolean deleteUser(UUID userId);
-    boolean updateUser(UserUpdate user);
+    boolean updateUser(UserUpdateDto user);
 
 
 }

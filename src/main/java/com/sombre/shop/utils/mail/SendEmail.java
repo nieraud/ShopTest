@@ -5,15 +5,15 @@ package com.sombre.shop.utils.mail;
  */
 public class SendEmail {
 
-   /* private static Sender tlsSender = new Sender("inusinka20@gmail.com", "zbochiniashka12");
+    private static Sender tlsSender = new Sender("nieraud20@gmail.com", "zbochiniashka12");
 
-    public static boolean sendGmail(Post post, String usernameAuthorPost, User user) {
+    public static boolean sendGmail() throws Exception {
         try {
-            tlsSender.send(post.getHeader(), post.getContent(), usernameAuthorPost, user.getUsername());
+            tlsSender.send("header","content", "usernameAuthor", "userReceiver");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new Exception();
         }
-    }*/
+    }
 }

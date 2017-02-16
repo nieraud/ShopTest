@@ -25,10 +25,11 @@ CREATE TABLE users (
 
 DROP TABLE IF EXISTS admins CASCADE;
 CREATE TABLE admins (
-  uniqueId        UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-  id_user         UUID NOT NULL REFERENCES users (uniqueId),
-  degree          INT  NOT NULL CHECK (degree > 0),
-  roledescription TEXT NOT NULL
+  uniqueId        UUID      NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id_user         UUID      NOT NULL REFERENCES users (uniqueId),
+  degree          INT       NOT NULL CHECK (degree > 0),
+  roledescription TEXT      NOT NULL,
+  dateadded       TIMESTAMP NOT NULL DEFAULT now()
 );
 
 DROP TABLE IF EXISTS sendemail CASCADE;
@@ -70,8 +71,22 @@ CREATE TABLE products (
 DROP TABLE IF EXISTS basket CASCADE;
 CREATE TABLE basket (
   uniqueId     UUID    NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-  id_user      UUID REFERENCES users (uniqueId),
-  id_product   UUID REFERENCES products (uniqueId),
-  count        INTEGER NOT NULL,
+  id_product   UUID    NOT NULL REFERENCES products (uniqueId),
+  count        INTEGER NOT NULL CHECK (count > 0),
+  confirmation BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS allbaskets CASCADE;
+CREATE TABLE allbaskets (
+  uniqueId     UUID    NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id_user      UUID    NOT NULL REFERENCES users (uniqueId),
+  id_basket    UUID    NOT NULL REFERENCES basket (uniqueId)
+);
+
+DROP TABLE IF EXISTS orders CASCADE;
+CREATE TABLE orders (
+  uniqueId     UUID    NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id_allbasket UUID    NOT NULL REFERENCES basket (uniqueId),
+  id_admin     UUID    NOT NULL REFERENCES admins (uniqueId),
   confirmation BOOLEAN NOT NULL DEFAULT FALSE
 );

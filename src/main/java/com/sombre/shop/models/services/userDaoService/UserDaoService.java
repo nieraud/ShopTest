@@ -1,8 +1,8 @@
 package com.sombre.shop.models.services.userDaoService;
 
 import com.sombre.shop.models.factory.AbstractDaoFactory;
-import com.sombre.shop.models.pojo.dto.user.input.UserUpdate;
-import com.sombre.shop.models.pojo.dto.user.output.UserForAddingToDB;
+import com.sombre.shop.models.pojo.dto.userDto.input.UserUpdateDto;
+import com.sombre.shop.models.pojo.dto.userDto.output.UserForAddingToDBDto;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
 import com.sombre.shop.models.services.AbstractDaoService;
@@ -20,7 +20,7 @@ public class UserDaoService extends AbstractDaoService implements UserRepository
     }
 
     @Override
-    public boolean registration(UserForAddingToDB user) {
+    public boolean registration(UserForAddingToDBDto user) {
 
         String sql = "INSERT INTO users VALUES (DEFAULT, :firstname, :lastname, :birthday, " +
                 ":phonenumber, DEFAULT, :useremail, :hashpassword, :encryptionsalt, NULL);";
@@ -132,7 +132,7 @@ public class UserDaoService extends AbstractDaoService implements UserRepository
     }
 
     @Override
-    public boolean updateUser(UserUpdate user) {
+    public boolean updateUser(UserUpdateDto user) {
         String sql = "UPDATE users SET (firstname, lastname, birthday, phonenumber) = " +
                 "(:firstname, :lastname, :birthday, :phonenumber) " +
                 "WHERE uniqueid = :id;";

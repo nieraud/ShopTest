@@ -3,16 +3,15 @@ package com.sombre.shop.controllers.usersCtrl;
 import com.google.gson.Gson;
 import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
 import com.sombre.shop.models.factory.DaoServiceFactory;
-import com.sombre.shop.models.pojo.dto.UniqueId;
-import com.sombre.shop.models.pojo.dto.user.input.UserAuthorization;
-import com.sombre.shop.models.pojo.dto.user.input.UserRegistration;
-import com.sombre.shop.models.pojo.dto.user.input.UserUpdate;
-import com.sombre.shop.models.pojo.dto.user.input.returnPassAndSalt.HashPasswordAndSalt;
-import com.sombre.shop.models.pojo.dto.user.output.UserForAddingToDB;
+import com.sombre.shop.models.pojo.dto.UniqueIdDto;
+import com.sombre.shop.models.pojo.dto.userDto.input.UserAuthorizationDto;
+import com.sombre.shop.models.pojo.dto.userDto.input.UserRegistrationDto;
+import com.sombre.shop.models.pojo.dto.userDto.input.UserUpdateDto;
+import com.sombre.shop.models.pojo.dto.userDto.input.returnPassAndSalt.HashPasswordAndSaltDto;
+import com.sombre.shop.models.pojo.dto.userDto.output.UserForAddingToDBDto;
 import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
-import com.sombre.shop.utils.exceptions.exceptions.UnauthorizedException;
 import com.sombre.shop.utils.security.UserSecurity;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
@@ -30,18 +29,18 @@ public class UsersCtrl {
 
     @Getter
     private static final UserRepository userDaoService = DaoServiceFactory.getUserService();
-    private static Gson json = new Gson();
+    private static Gson gson = new Gson();
 
 
     @Getter
     private static final Route registrationUser = (request, response) -> {
 
-        UserRegistration user = json.fromJson(request.body(), UserRegistration.class);
+        UserRegistrationDto user = gson.fromJson(request.body(), UserRegistrationDto.class);
         ObjectConverterValidator.nullChecker(user);
 
-        HashPasswordAndSalt security = UserSecurity.generateHashPassword(user.getPassword());
+        HashPasswordAndSaltDto security = UserSecurity.generateHashPassword(user.getPassword());
 
-        UserForAddingToDB endingUser = new UserForAddingToDB(user.getFirstname(),
+        UserForAddingToDBDto endingUser = new UserForAddingToDBDto(user.getFirstname(),
                 user.getLastname(),
                 new SimpleDateFormat("yyyy-MM-dd").parse(user.getBirthday()),
                 user.getPhonenumber(),
@@ -60,7 +59,7 @@ public class UsersCtrl {
     @Getter
     private static final Route authorization = (request, response) -> {
 
-        UserAuthorization user = json.fromJson(request.body(), UserAuthorization.class);
+        UserAuthorizationDto user = gson.fromJson(request.body(), UserAuthorizationDto.class);
         ObjectConverterValidator.nullChecker(user);
 
         Users userFromDB = userDaoService.getUserByUserEmail(user.getUseremail());
@@ -78,7 +77,7 @@ public class UsersCtrl {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("user");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
         } else {
             return "Exception: Not correct password!";
         }
@@ -87,7 +86,7 @@ public class UsersCtrl {
 
     @Getter
     private static final Route updateUser = (request, response) -> {
-        UserUpdate user = json.fromJson(request.body(), UserUpdate.class);
+        UserUpdateDto user = gson.fromJson(request.body(), UserUpdateDto.class);
         ObjectConverterValidator.nullChecker(user);
 
         if (userDaoService.updateUser(user)) {
@@ -95,7 +94,7 @@ public class UsersCtrl {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("user updated");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
         } else throw new Exception();
 
 
@@ -103,7 +102,7 @@ public class UsersCtrl {
 
     @Getter
     private static final Route deleteUser = (request, response) -> {
-        UniqueId user = json.fromJson(request.body(), UniqueId.class);
+        UniqueIdDto user = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(user);
 
         Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(user.getUniqueid());
@@ -115,7 +114,7 @@ public class UsersCtrl {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("user deleted");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
 
         } else throw new Exception();
 
@@ -123,7 +122,7 @@ public class UsersCtrl {
 
     @Getter
     private static final Route userById = (request, response) -> {
-        UniqueId user = json.fromJson(request.body(), UniqueId.class);
+        UniqueIdDto user = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(user);
 
         Users userFromDb = userDaoService.getUserById(user.getUniqueid());
@@ -131,7 +130,7 @@ public class UsersCtrl {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            return json.toJson(userFromDb);
+            return gson.toJson(userFromDb);
 
         } else throw new NullPointerException();
 

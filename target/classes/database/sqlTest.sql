@@ -11,31 +11,59 @@ VALUES (DEFAULT,
         DEFAULT);
 
 CREATE TABLE test (
-  id   UUID        NOT NULL DEFAULT uuid_generate_v4(),
-  date DATE DEFAULT NULL
+  id   UUID NOT NULL DEFAULT uuid_generate_v4(),
+  date DATE          DEFAULT NULL
 );
 
-DELETE FROM admins WHERE uniqueid = '3a33af2c-9349-4441-9f16-f17b6b27db73';
+DELETE FROM admins
+WHERE uniqueid = '3a33af2c-9349-4441-9f16-f17b6b27db73';
 
-SELECT * from users;
+SELECT *
+FROM users;
 
-SELECT  * FROM admins;
+SELECT *
+FROM admins;
 
-drop TABLE test;
+SELECT *
+FROM categories;
 
-INSERT INTO admins VALUES (DEFAULT , 'da9c9c2e-ca94-454f-b8b0-c31a1ce0d2cc', 1, 'Owner');
+UPDATE categories
+SET (name, description)
+= ('Accessories for laptops', 'This category contains accessories for laptops')
+WHERE uniqueid = '5dde1350-2354-462d-aea5-4c77c3eae2b1';
 
-SELECT admins.uniqueid, admins.id_user, admins.degree,
-admins.roledescription, users.firstname, users.lastname, users.birthday,
-users.phonenumber, users.datereg, users.useremail
+INSERT INTO admins VALUES (DEFAULT, '28af5675-e563-431a-b565-91965e54fe09', 1, 'Owner');
+
+SELECT
+  admins.uniqueid,
+  admins.id_user,
+  admins.degree,
+  admins.roledescription,
+  users.firstname,
+  users.lastname,
+  users.birthday,
+  users.phonenumber,
+  users.datereg,
+  users.useremail
 FROM admins
-INNER JOIN users ON admins.id_user = users.uniqueid
+  INNER JOIN users ON admins.id_user = users.uniqueid
 WHERE admins.uniqueid = '25faaa9f-7be9-4c5a-aded-dc6310517a35';
 
 
-SELECT admins.uniqueid, admins.id_user, admins.degree,
-admins.roledescription, users.firstname, users.lastname, users.birthday,
-users.phonenumber, users.datereg, users.useremail
+SELECT
+  admins.uniqueid,
+  admins.id_user,
+  admins.degree,
+  admins.roledescription,
+  users.firstname,
+  users.lastname,
+  users.birthday,
+  users.phonenumber,
+  users.datereg,
+  users.useremail
 FROM admins
-INNER JOIN users ON admins.id_user = users.uniqueid
+  INNER JOIN users ON admins.id_user = users.uniqueid
 WHERE admins.uniqueid = '25faaa9f-7be9-4c5a-aded-dc6310517a35';
+
+DELETE FROM admins
+WHERE degree = 3;

@@ -10,7 +10,7 @@ import java.util.Properties;
  */
 public class Sender {
 
-   /* private String username;
+    private String username;
     private String password;
     private Properties props;
 
@@ -34,20 +34,21 @@ public class Sender {
 
         try {
             Message message = new MimeMessage(session);
-            //от кого
+            //від кого
             message.setFrom(new InternetAddress(fromEmail));
             //кому
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            //Заголовок письма
+            //Заголовок
             message.setSubject(subject);
-            //Содержимое
+            //Контент
             message.setText(text);
 
-            //Отправляем сообщение
+            //Відправляємо
             Transport.send(message);
+
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
 
-    }*/
+    }
 }

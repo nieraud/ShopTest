@@ -1,6 +1,9 @@
 package com.sombre.shop.models.factory;
 
 import com.sombre.shop.models.repositories.adminRepository.AdminRepository;
+import com.sombre.shop.models.repositories.categoriesRepository.CategoriesRepository;
+import com.sombre.shop.models.repositories.productsRepository.ProductsRepository;
+import com.sombre.shop.models.repositories.subcategoriesRepository.SubcategoriesRepository;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
 import org.sql2o.Sql2o;
 
@@ -18,5 +21,17 @@ public class DaoServiceFactory extends AbstractDaoFactory {
 
     public static AdminRepository getAdminService() {
         return DAO_SERVICE.ADMIN_REPOSITORY;
+    }
+
+    public static CategoriesRepository getCategoriesService() {
+        return DAO_SERVICE.CATEGORIES_REPOSITORY;
+    }
+
+    public static SubcategoriesRepository getSubcategoriesService() {
+        return DAO_SERVICE.SUBCATEGORIES_REPOSITORY;
+    }
+
+    public static ProductsRepository getProductsDaoService(){
+        return DAO_SERVICE.PRODUCTS_REPOSITORY;
     }
 }

@@ -3,11 +3,11 @@ package com.sombre.shop.controllers.adminsCtrl;
 import com.google.gson.Gson;
 import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
 import com.sombre.shop.models.factory.DaoServiceFactory;
-import com.sombre.shop.models.pojo.dto.UniqueId;
-import com.sombre.shop.models.pojo.dto.admin.input.AddAdmin;
-import com.sombre.shop.models.pojo.dto.admin.input.UpdateAdmin;
-import com.sombre.shop.models.pojo.dto.admin.output.GetAdmin;
-import com.sombre.shop.models.pojo.dto.user.input.UserAuthorization;
+import com.sombre.shop.models.pojo.dto.UniqueIdDto;
+import com.sombre.shop.models.pojo.dto.adminDto.input.AddAdminDto;
+import com.sombre.shop.models.pojo.dto.adminDto.input.UpdateAdminDto;
+import com.sombre.shop.models.pojo.dto.adminDto.output.GetAdminDto;
+import com.sombre.shop.models.pojo.dto.userDto.input.UserAuthorizationDto;
 import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.adminRepository.AdminRepository;
@@ -26,11 +26,11 @@ public class AdminsCtrl {
 
     @Getter
     private static final AdminRepository adminDaoService = DaoServiceFactory.getAdminService();
-    private static Gson json = new Gson();
+    private static Gson gson = new Gson();
 
     @Getter
     private static final Route authorizationAdmin = (request, response) -> {
-        UserAuthorization admin = json.fromJson(request.body(), UserAuthorization.class);
+        UserAuthorizationDto admin = gson.fromJson(request.body(), UserAuthorizationDto.class);
         ObjectConverterValidator.nullChecker(admin);
 
         Users userFromDB = UsersCtrl.getUserDaoService().getUserByUserEmail(admin.getUseremail());
@@ -51,7 +51,7 @@ public class AdminsCtrl {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("admin");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
         } else {
             return "Exception: Not correct password!";
         }
@@ -59,7 +59,7 @@ public class AdminsCtrl {
 
     @Getter
     private static final Route addAdmin = (request, response) -> {
-        AddAdmin newAdmin = json.fromJson(request.body(), AddAdmin.class);
+        AddAdminDto newAdmin = gson.fromJson(request.body(), AddAdminDto.class);
         ObjectConverterValidator.nullChecker(newAdmin);
 
         if (adminDaoService.addAdmin(newAdmin)) {
@@ -67,13 +67,13 @@ public class AdminsCtrl {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
         } else throw new Exception();
     };
 
     @Getter
     private static final Route updateAdmin = (request, response) -> {
-        UpdateAdmin admin = json.fromJson(request.body(), UpdateAdmin.class);
+        UpdateAdminDto admin = gson.fromJson(request.body(), UpdateAdminDto.class);
         ObjectConverterValidator.nullChecker(admin);
 
         if (adminDaoService.updateAdmin(admin)) {
@@ -81,49 +81,49 @@ public class AdminsCtrl {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
         } else throw new Exception();
     };
 
     @Getter
     private static final Route deleteAdmin = (request, response) -> {
-        UniqueId admin = json.fromJson(request.body(), UniqueId.class);
+        UniqueIdDto admin = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(admin);
 
         if (adminDaoService.deleteAdmin(admin.getUniqueid())) {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");
-            return json.toJson(response.body());
+            return gson.toJson(response.body());
         } else throw new Exception();
     };
 
     @Getter
     private static final Route admin = (request, response) -> {
-        UniqueId admin = json.fromJson(request.body(), UniqueId.class);
+        UniqueIdDto admin = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(admin);
 
-        GetAdmin adminFromDb = adminDaoService.getAdminById(admin.getUniqueid());
+        GetAdminDto adminFromDb = adminDaoService.getAdminById(admin.getUniqueid());
 
         if (adminFromDb != null) {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");
-            return json.toJson(adminFromDb);
+            return gson.toJson(adminFromDb);
         } else throw new NullPointerException();
     };
 
     @Getter
     private static final Route allAdmins = (request, response) -> {
 
-        List<GetAdmin> adminFromDb = adminDaoService.getAllAdmins();
+        List<GetAdminDto> adminFromDb = adminDaoService.getAllAdmins();
 
         if (!adminFromDb.isEmpty()) {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");
-            return json.toJson(adminFromDb);
+            return gson.toJson(adminFromDb);
         } else throw new NullPointerException();
     };
 
