@@ -83,8 +83,14 @@ public class CategoriesCtrl {
     private static final Route allCategories = (request, response) -> {
         List<Categories> categoriesList = categoriesDaoService.getAllCategories();
 
-        if (!categoriesList.isEmpty()) return gson.toJson(categoriesList);
-        else throw new NullPointerException();
+        if (!categoriesList.isEmpty()) {
+
+            response.status(HttpStatus.OK_200);
+            response.type("application/json");
+            response.body("successfully");
+            return gson.toJson(categoriesList);
+
+        } else throw new NullPointerException();
     };
 
 }

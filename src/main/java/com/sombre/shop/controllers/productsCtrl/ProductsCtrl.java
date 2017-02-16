@@ -39,4 +39,14 @@ public class ProductsCtrl {
     private static final Route allProducts = (request, response) -> {
         return "";
     };
+
+    @Getter
+    private static final Route allProductsBySubcategory = (request, response) -> {
+        return "";
+    };
+
+    @Getter
+    private static final Route allProductsByCategory = (request, response) -> {
+        return "";
+    };
 }

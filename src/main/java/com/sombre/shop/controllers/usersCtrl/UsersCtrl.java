@@ -19,6 +19,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import static spark.Spark.halt;
 
@@ -134,6 +135,17 @@ public class UsersCtrl {
 
         } else throw new NullPointerException();
 
+    };
+
+    @Getter
+    private static final Route allUsers = (request, response) -> {
+        List<Users> users = getUserDaoService().getAllUsers();
+
+        if (!users.isEmpty()) {
+            response.status(HttpStatus.OK_200);
+            response.type("application/json");
+            return gson.toJson(users);
+        } else throw new NullPointerException();
     };
 
 }

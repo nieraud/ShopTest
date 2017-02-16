@@ -9,6 +9,7 @@ import com.sombre.shop.models.services.AbstractDaoService;
 import org.sql2o.Connection;
 import org.sql2o.Sql2oException;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -147,6 +148,22 @@ public class UserDaoService extends AbstractDaoService implements UserRepository
                     .executeUpdate();
             return true;
 
+        } catch (Sql2oException e) {
+            throw new Sql2oException(e);
+        }
+    }
+
+    @Override
+    public List<Users> getAllUsers() {
+        String sql = "SELECT * FROM users;";
+
+        try (Connection connection = daoFactory.getDataSource().open()) {
+
+            List<Users> users = connection.createQuery(sql, false)
+                    .executeAndFetch(Users.class);
+
+            if (!users.isEmpty()) return users;
+            else return null;
         } catch (Sql2oException e) {
             throw new Sql2oException(e);
         }

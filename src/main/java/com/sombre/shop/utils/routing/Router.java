@@ -38,38 +38,66 @@ public class Router implements Routing {
             path("/user", () -> {
                 post("/upd", UsersCtrl.getUpdateUser());
                 delete("/del", UsersCtrl.getDeleteUser());
+                post("/get", UsersCtrl.getUserById());
+
+                path("/basket", () -> {
+
+                });
+
+                path("/products", () -> {
+                    post("/get", ProductsCtrl.getProductById());
+                    post("/subcategory", ProductsCtrl.getAllProductsBySubcategory());
+                    post("/category", ProductsCtrl.getAllProductsByCategory());
+                    get("/all", ProductsCtrl.getAllProducts());
+                });
             });
 
             before("/admin/*", BeforeFilter.getAdminChecker());
             path("/admin", () -> {
+                path("/user", () -> {
+                    post("/get", UsersCtrl.getUserById());
+                    get("/all", UsersCtrl.getAllUsers());
+                });
+
                 path("/category", () -> {
                     post("/add", CategoriesCtrl.getAddCategory());
                     post("/upd", CategoriesCtrl.getUpdateCategory());
                     delete("/del", CategoriesCtrl.getDeleteCategory());
                 });
+
                 path("/subcategory", () -> {
                     post("/add", SubcategoriesCtrl.getAddSubcategory());
                     post("/upd", SubcategoriesCtrl.getUpdateCSubcategory());
                     delete("/del", SubcategoriesCtrl.getDeleteSubcategory());
+                    post("/get", SubcategoriesCtrl.getSubcategoryById());
+                    get("/all", SubcategoriesCtrl.getAllSubcategories());
+
+                });
+
+                path("/product", () -> {
+                    post("/add", ProductsCtrl.getAddProduct());
+                    post("/upd", ProductsCtrl.getUpdateProduct());
+                    delete("/del", ProductsCtrl.getDeleteProduct());
+                    post("/get", ProductsCtrl.getProductById());
+                    post("/subcategory", ProductsCtrl.getAllProductsBySubcategory());
+                    post("/category", ProductsCtrl.getAllProductsByCategory());
+                    get("/all", ProductsCtrl.getAllProducts());
 
                 });
 
 
-               /* post("/add", ProductsCtrl.getAddSubcategory());
-                post("/upd", ProductsCtrl.getUpdateCSubcategory());
-                delete("/del", ProductsCtrl.getDeleteSubcategory());
-                post("/get", ProductsCtrl.getSubcategoryById());
-                get("/all",ProductsCtrl.getAllSubcategories());
-                */
             });
 
-            post("/get", UsersCtrl.getUserById()); // what about admins ?
+            path("/category", () -> {
+                post("/get", CategoriesCtrl.getCategoryById());
+                get("/all", CategoriesCtrl.getAllCategories());
+            });
 
-            post("/get", CategoriesCtrl.getCategoryById());
-            get("/all", CategoriesCtrl.getAllCategories());
+            path("/subcategory", () -> {
+                post("/get", SubcategoriesCtrl.getSubcategoryById());
+                get("/all", SubcategoriesCtrl.getAllSubcategories());
+            });
 
-            post("/get", SubcategoriesCtrl.getSubcategoryById());
-            get("/all", SubcategoriesCtrl.getAllSubcategories());
 
         });
     }
