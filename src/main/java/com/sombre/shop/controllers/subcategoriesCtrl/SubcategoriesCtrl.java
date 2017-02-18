@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sombre.shop.models.factory.DaoServiceFactory;
 import com.sombre.shop.models.pojo.dto.UniqueIdDto;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.AddSubcategoryDto;
+import com.sombre.shop.models.pojo.dto.subcategoriesDto.output.SubcategoriesByIdDto;
 import com.sombre.shop.models.pojo.entity.Categories;
 import com.sombre.shop.models.pojo.entity.SubCategories;
 import com.sombre.shop.models.repositories.subcategoriesRepository.SubcategoriesRepository;
@@ -67,7 +68,7 @@ public class SubcategoriesCtrl {
         UniqueIdDto subcategoryId = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(subcategoryId);
 
-        SubCategories subcategory = subcategoriesDaoService.getSubcategoryById(subcategoryId.getUniqueid());
+        SubcategoriesByIdDto subcategory = subcategoriesDaoService.getSubcategoryById(subcategoryId.getUniqueid());
 
         if (subcategory != null) {
             response.status(HttpStatus.OK_200);
@@ -79,11 +80,11 @@ public class SubcategoriesCtrl {
     };
 
     @Getter
-    private static final Route allSubcategories = (request, response) -> {
+    private static final Route allSubcategoriesByCategory = (request, response) -> {
         UniqueIdDto categoryId = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(categoryId);
 
-        List<SubCategories> subcategories =
+        List<SubcategoriesByIdDto> subcategories =
                 subcategoriesDaoService.getAllSubcategoriesByCategoryId(categoryId.getUniqueid());
 
         if (!subcategories.isEmpty()) {

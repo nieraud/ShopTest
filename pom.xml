@@ -46,11 +46,17 @@
         </dependency>
 
         <!--JDBC library-->
-        <dependency>
+       <!-- <dependency>
             <groupId>org.sql2o</groupId>
             <artifactId>sql2o</artifactId>
             <version>1.6.0-RC2</version>
-        </dependency>
+        </dependency> -->
+            <dependency>
+                <groupId>org.sql2o</groupId>
+                <artifactId>sql2o</artifactId>
+                <version>1.5.4</version>
+            </dependency>
+
 
         <!--PostgreSQL connection-->
         <dependency>

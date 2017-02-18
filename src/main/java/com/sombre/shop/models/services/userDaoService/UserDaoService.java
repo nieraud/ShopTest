@@ -118,6 +118,7 @@ public class UserDaoService extends AbstractDaoService implements UserRepository
 
     @Override
     public boolean deleteUser(UUID userId) {
+        
         String sql = "DELETE FROM users WHERE uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {

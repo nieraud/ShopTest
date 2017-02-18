@@ -49,10 +49,10 @@ CREATE TABLE categories (
 
 DROP TABLE IF EXISTS subcategories CASCADE;
 CREATE TABLE subcategories (
-  uniqueId       UUID        NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-  name           VARCHAR(30) NOT NULL,
-  description    TEXT                 DEFAULT NULL,
-  id_subcategory UUID        NOT NULL REFERENCES categories (uniqueId)
+  uniqueId    UUID        NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name        VARCHAR(30) NOT NULL,
+  description TEXT                 DEFAULT NULL,
+  id_category UUID        NOT NULL REFERENCES categories (uniqueId)
 );
 
 
@@ -78,9 +78,9 @@ CREATE TABLE basket (
 
 DROP TABLE IF EXISTS allbaskets CASCADE;
 CREATE TABLE allbaskets (
-  uniqueId     UUID    NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-  id_user      UUID    NOT NULL REFERENCES users (uniqueId),
-  id_basket    UUID    NOT NULL REFERENCES basket (uniqueId)
+  uniqueId  UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id_user   UUID NOT NULL REFERENCES users (uniqueId),
+  id_basket UUID NOT NULL REFERENCES basket (uniqueId)
 );
 
 DROP TABLE IF EXISTS orders CASCADE;

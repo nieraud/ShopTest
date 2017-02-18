@@ -32,7 +32,7 @@ SET (name, description)
 = ('Accessories for laptops', 'This category contains accessories for laptops')
 WHERE uniqueid = '5dde1350-2354-462d-aea5-4c77c3eae2b1';
 
-INSERT INTO categories VALUES (DEFAULT , 'ololo','viv;v; r');
+INSERT INTO categories VALUES (DEFAULT, 'ololo', 'viv;v; r');
 
 INSERT INTO admins VALUES (DEFAULT, '28af5675-e563-431a-b565-91965e54fe09', 1, 'Owner');
 
@@ -50,6 +50,17 @@ SELECT
 FROM admins
   INNER JOIN users ON admins.id_user = users.uniqueid
 WHERE admins.uniqueid = '25faaa9f-7be9-4c5a-aded-dc6310517a35';
+
+SELECT
+  subcategories.uniqueid,
+  subcategories.name,
+  subcategories.description,
+  subcategories.id_category,
+  categories.name,
+  categories.description
+FROM subcategories
+  INNER JOIN categories ON subcategories.id_category = categories.uniqueid
+WHERE subcategories.uniqueid = '43643d3f-b454-4197-9bbe-622ea16813ed';
 
 
 SELECT
@@ -69,3 +80,20 @@ WHERE admins.uniqueid = '25faaa9f-7be9-4c5a-aded-dc6310517a35';
 
 DELETE FROM admins
 WHERE degree = 3;
+
+SELECT *
+FROM users;
+
+SELECT *
+FROM admins;
+
+SELECT *
+FROM categories;
+
+SELECT *
+FROM subcategories;
+
+SELECT *
+FROM products;
+
+

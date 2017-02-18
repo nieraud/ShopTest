@@ -2,13 +2,16 @@ package com.sombre.shop.models.services.subcategoriesDaoService;
 
 import com.sombre.shop.models.factory.AbstractDaoFactory;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.AddSubcategoryDto;
+import com.sombre.shop.models.pojo.dto.subcategoriesDto.output.SubcategoriesByIdDto;
 import com.sombre.shop.models.pojo.entity.SubCategories;
 import com.sombre.shop.models.repositories.subcategoriesRepository.SubcategoriesRepository;
 import com.sombre.shop.models.services.AbstractDaoService;
 import org.sql2o.Connection;
 import org.sql2o.Sql2oException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,7 +33,7 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
             connection.createQuery(sql, false)
                     .addParameter("name", subCategory.getName())
                     .addParameter("description", subCategory.getDescription())
-                    .addParameter("categoryId", subCategory.setCategoryid())
+                    .addParameter("categoryId", subCategory.getCategoryid())
                     .executeUpdate();
             return true;
         } catch (Sql2oException e) {
@@ -74,17 +77,26 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
     }
 
     @Override
-    public SubCategories getSubcategoryById(UUID subCategoryId) {
+    public SubcategoriesByIdDto getSubcategoryById(UUID subCategoryId) {
 
-        String sql = "SELECT * FROM subcategories WHERE uniqueid = :id;";
+        String sql = "SELECT subcategories.uniqueid, " +
+                "subcategories.name AS subname, " +
+                "subcategories.description AS subdescription, " +
+                "subcategories.id_category, " +
+                "categories.name, " +
+                "categories.description " +
+                "FROM subcategories " +
+                "INNER JOIN categories ON subcategories.id_category = categories.uniqueid " +
+                "WHERE subcategories.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
-            SubCategories subCategory = connection.createQuery(sql, false)
+            SubcategoriesByIdDto subcategory = connection.createQuery(sql, false)
                     .addParameter("id", subCategoryId)
-                    .executeAndFetchFirst(SubCategories.class);
+                    .executeAndFetchFirst(SubcategoriesByIdDto.class);
 
-            if (subCategory != null) return subCategory;
+            System.out.println(subcategory.toString());
+            if (subcategory != null) return subcategory;
             else return null;
         } catch (Sql2oException e) {
             throw new Sql2oException(e);
@@ -92,15 +104,23 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
     }
 
     @Override
-    public List<SubCategories> getAllSubcategoriesByCategoryId(UUID categoryId) {
+    public List<SubcategoriesByIdDto> getAllSubcategoriesByCategoryId(UUID categoryId) {
 
-        String sql = "SELECT * FROM subcategories WHERE id_category = :id;";
+        String sql = "SELECT subcategories.uniqueid, " +
+                "subcategories.name AS subname, " +
+                "subcategories.description AS subdescription, " +
+                "subcategories.id_category, " +
+                "categories.name, " +
+                "categories.description " +
+                "FROM subcategories " +
+                "INNER JOIN categories ON subcategories.id_category = categories.uniqueid " +
+                "WHERE categories.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
-            List<SubCategories> subCategories = connection.createQuery(sql, false)
+            List<SubcategoriesByIdDto> subCategories = connection.createQuery(sql, false)
                     .addParameter("id", categoryId)
-                    .executeAndFetch(SubCategories.class);
+                    .executeAndFetch(SubcategoriesByIdDto.class);
 
             if (!subCategories.isEmpty()) return subCategories;
             else return null;
