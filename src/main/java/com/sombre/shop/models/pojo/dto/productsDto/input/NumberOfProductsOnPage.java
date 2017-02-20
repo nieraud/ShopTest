@@ -9,5 +9,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class NumberOfProductsOnPage {
-    private int numberOfProducts;
+    private int count;
 }

@@ -1,6 +1,7 @@
 package com.sombre.shop.models.repositories.categoriesRepository;
 
 import com.sombre.shop.models.pojo.dto.categoriesDto.input.AddCategoryDto;
+import com.sombre.shop.models.pojo.dto.categoriesDto.output.GetCategoryDto;
 import com.sombre.shop.models.pojo.entity.Categories;
 
 import java.util.List;
@@ -11,13 +12,13 @@ import java.util.UUID;
  */
 public interface CategoriesRepository {
 
-    boolean addCategory(AddCategoryDto category);
+    boolean addCategory(AddCategoryDto category, UUID adminId);
 
     boolean updateCategory(Categories category);
 
     boolean deleteCategory(UUID categoryId);
 
-    Categories getCategoryById(UUID categoryId);
+    GetCategoryDto getCategoryById(UUID categoryId);
 
-    List<Categories> getAllCategories();
+    List<GetCategoryDto> getAllCategories();
 }

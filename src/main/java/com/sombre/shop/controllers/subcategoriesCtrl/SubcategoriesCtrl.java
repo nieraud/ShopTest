@@ -1,12 +1,17 @@
 package com.sombre.shop.controllers.subcategoriesCtrl;
 
 import com.google.gson.Gson;
+import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
+import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
 import com.sombre.shop.models.factory.DaoServiceFactory;
 import com.sombre.shop.models.pojo.dto.UniqueIdDto;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.AddSubcategoryDto;
+import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.UpdSubcategoryDto;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.output.SubcategoriesByIdDto;
+import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Categories;
 import com.sombre.shop.models.pojo.entity.SubCategories;
+import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.subcategoriesRepository.SubcategoriesRepository;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
@@ -14,6 +19,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by inna on 16.02.17.
@@ -29,17 +35,23 @@ public class SubcategoriesCtrl {
         AddSubcategoryDto subcategory = gson.fromJson(request.body(), AddSubcategoryDto.class);
         ObjectConverterValidator.nullChecker(subcategory);
 
-        if (subcategoriesDaoService.addSubcategory(subcategory)) {
+        Users user = UsersCtrl.getUserDaoService()
+                .getUserByAccessToken(request.headers("Authorization"));
+        Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(user.getUniqueid());
+
+        if (subcategoriesDaoService.addSubcategory(subcategory, admin.getUniqueid())) {
+
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");
             return gson.toJson(response.body());
-        } else throw new Exception();
+
+        }else throw new Exception();
     };
 
     @Getter
-    private static final Route updateCSubcategory = (request, response) -> {
-        SubCategories subCategory = gson.fromJson(request.body(), SubCategories.class);
+    private static final Route updateSubcategory = (request, response) -> {
+        UpdSubcategoryDto subCategory = gson.fromJson(request.body(), UpdSubcategoryDto.class);
         ObjectConverterValidator.nullChecker(subCategory);
 
         if (subcategoriesDaoService.updateSubcategory(subCategory)) {

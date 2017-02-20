@@ -1,11 +1,13 @@
 package com.sombre.shop.utils.routing;
 
+import com.sombre.shop.controllers.adminsCtrl.blacklistCtrl.BlacklistCtrl;
 import com.sombre.shop.controllers.categoriesCtrl.CategoriesCtrl;
 import com.sombre.shop.controllers.filters.BeforeFilter;
 import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
 import com.sombre.shop.controllers.productsCtrl.ProductsCtrl;
 import com.sombre.shop.controllers.subcategoriesCtrl.SubcategoriesCtrl;
 import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
+import com.sombre.shop.models.pojo.entity.Blacklist;
 import com.sombre.shop.models.repositories.productsRepository.ProductsRepository;
 import lombok.NonNull;
 
@@ -18,11 +20,11 @@ public class Router implements Routing {
     public void init() {
 
         post("/admins/auth", AdminsCtrl.getAuthorizationAdmin());
+
         post("/reg", UsersCtrl.getRegistrationUser());
         post("/auth", UsersCtrl.getAuthorization());
 
-
-        before("/sec/*", BeforeFilter.getCheckAuthorization());
+        before("/sec/*", BeforeFilter.getCheckAuthorizationAndBlacklist());
         path("/sec", () -> {
 
             before("/owner/*", BeforeFilter.getOwnerChecker());
@@ -35,12 +37,20 @@ public class Router implements Routing {
             before("/admin/*", BeforeFilter.getAdminChecker());
             path("/admin", () -> {
 
-                post("/get", AdminsCtrl.getAdmin());
+                post("/id", AdminsCtrl.getAdmin());
                 get("/all", AdminsCtrl.getAllAdmins());
 
                 path("/user", () -> {
-                    post("/get", UsersCtrl.getUserById());
+                    post("/id", UsersCtrl.getUserById());
                     get("/all", UsersCtrl.getAllUsers());
+
+                    path("/blacklist", ()->{
+                        post("/add", BlacklistCtrl.getAddUserToBlackList());
+                        post("/upd", BlacklistCtrl.getUpdateBlacklist());
+                        delete("/del", BlacklistCtrl.getDeleteBlacklist());
+                        post("/id", BlacklistCtrl.getBlacklistById());
+                        get("/", BlacklistCtrl.getAllBlacklist());
+                    });
                 });
 
                 path("/category", () -> {
@@ -51,11 +61,10 @@ public class Router implements Routing {
 
                 path("/subcategory", () -> {
                     post("/add", SubcategoriesCtrl.getAddSubcategory());
-                    post("/upd", SubcategoriesCtrl.getUpdateCSubcategory());
-                    // above tested
+                    post("/upd", SubcategoriesCtrl.getUpdateSubcategory());
                     delete("/del", SubcategoriesCtrl.getDeleteSubcategory());
                 });
-
+//above tested
                 path("/product", () -> {
                     post("/add", ProductsCtrl.getAddProduct());
                     post("/upd", ProductsCtrl.getUpdateProduct());
@@ -64,19 +73,18 @@ public class Router implements Routing {
 
             }); //admin
 
-
             path("/category", () -> {
-                post("/get", CategoriesCtrl.getCategoryById());
+                post("/id", CategoriesCtrl.getCategoryById());
                 get("/all", CategoriesCtrl.getAllCategories());
             });
 
             path("/subcategory", () -> {
-                post("/get", SubcategoriesCtrl.getSubcategoryById());
+                post("/id", SubcategoriesCtrl.getSubcategoryById());
                 post("/category", SubcategoriesCtrl.getAllSubcategoriesByCategory());
             });
 
             path("/products", () -> {
-                post("/get", ProductsCtrl.getProductById());
+                post("/id", ProductsCtrl.getProductById());
                 post("/subcategory", ProductsCtrl.getAllProductsBySubcategory());
                 post("/category", ProductsCtrl.getAllProductsByCategory());
                 get("/all", ProductsCtrl.getAllProducts());
@@ -86,7 +94,7 @@ public class Router implements Routing {
             path("/own", () -> {
                 post("/upd", UsersCtrl.getUpdateUser());
                 delete("/del", UsersCtrl.getDeleteUser());
-                post("/get", UsersCtrl.getUserById());
+                post("/id", UsersCtrl.getUserById());
 
                 path("/basket", () -> {
 

@@ -81,7 +81,7 @@ public class ProductsCtrl {
 
     @Getter
     private static final Route allProducts = (request, response) -> {
-        NumberOfProductsOnPage num = gson.fromJson(request.body(), NumberOfProductsOnPage.class);
+        /*NumberOfProductsOnPage num = gson.fromJson(request.body(), NumberOfProductsOnPage.class);
         ObjectConverterValidator.nullChecker(num);
 
         List<Products> products = productsDaoService.getAllProducts(num.getNumberOfProducts());
@@ -91,7 +91,8 @@ public class ProductsCtrl {
             response.type("application/json");
             response.body("successfully");
             return gson.toJson(products);
-        } else throw new NullPointerException();
+        } else throw new NullPointerException();*/
+        return "";
     };
 
     @Getter

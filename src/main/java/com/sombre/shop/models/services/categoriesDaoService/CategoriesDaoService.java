@@ -2,6 +2,7 @@ package com.sombre.shop.models.services.categoriesDaoService;
 
 import com.sombre.shop.models.factory.AbstractDaoFactory;
 import com.sombre.shop.models.pojo.dto.categoriesDto.input.AddCategoryDto;
+import com.sombre.shop.models.pojo.dto.categoriesDto.output.GetCategoryDto;
 import com.sombre.shop.models.pojo.entity.Categories;
 import com.sombre.shop.models.repositories.categoriesRepository.CategoriesRepository;
 import com.sombre.shop.models.services.AbstractDaoService;
@@ -21,13 +22,14 @@ public class CategoriesDaoService extends AbstractDaoService implements Categori
 
 
     @Override
-    public boolean addCategory(AddCategoryDto category) {
+    public boolean addCategory(AddCategoryDto category, UUID adminId) {
 
-        String sql = "INSERT INTO categories VALUES (DEFAULT, :name, :description);";
+        String sql = "INSERT INTO categories VALUES (DEFAULT, :name, :description, :adminId, DEFAULT);";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
             connection.createQuery(sql, false)
+                    .addParameter("adminId", adminId)
                     .addParameter("name", category.getName())
                     .addParameter("description", category.getDescription())
                     .executeUpdate();
@@ -48,7 +50,7 @@ public class CategoriesDaoService extends AbstractDaoService implements Categori
             connection.createQuery(sql, false)
                     .addParameter("name", category.getName())
                     .addParameter("description", category.getDescription())
-                    .addParameter("id", category.getUniqueId())
+                    .addParameter("id", category.getUniqueid())
                     .executeUpdate();
             return true;
         } catch (Sql2oException e) {
@@ -74,15 +76,25 @@ public class CategoriesDaoService extends AbstractDaoService implements Categori
     }
 
     @Override
-    public Categories getCategoryById(UUID categoryId) {
+    public GetCategoryDto getCategoryById(UUID categoryId) {
 
-        String sql = "SELECT * FROM categories WHERE uniqueid = :id;";
+        String sql = "SELECT categories.uniqueid, " +
+                "categories.name, " +
+                "categories.description, " +
+                "categories.dateadded, " +
+                "categories.id_adminadded, " +
+                "users.firstname, " +
+                "users.lastname " +
+                "FROM categories " +
+                "INNER JOIN admins ON categories.id_adminadded = admins.uniqueid " +
+                "INNER JOIN users ON admins.id_user = users.uniqueid " +
+                "WHERE categories.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
-            Categories category = connection.createQuery(sql, false)
+            GetCategoryDto category = connection.createQuery(sql, false)
                     .addParameter("id", categoryId)
-                    .executeAndFetchFirst(Categories.class);
+                    .executeAndFetchFirst(GetCategoryDto.class);
 
             if (category != null) return category;
             else return null;
@@ -93,14 +105,23 @@ public class CategoriesDaoService extends AbstractDaoService implements Categori
     }
 
     @Override
-    public List<Categories> getAllCategories() {
+    public List<GetCategoryDto> getAllCategories() {
 
-        String sql = "SELECT * FROM categories;";
+        String sql = "SELECT categories.uniqueid, " +
+                "categories.name, " +
+                "categories.description, " +
+                "categories.dateadded, " +
+                "categories.id_adminadded, " +
+                "users.firstname, " +
+                "users.lastname " +
+                "FROM categories " +
+                "INNER JOIN admins ON categories.id_adminadded = admins.uniqueid " +
+                "INNER JOIN users ON admins.id_user = users.uniqueid";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
-            List<Categories> categories = connection.createQuery(sql, false)
-                    .executeAndFetch(Categories.class);
+            List<GetCategoryDto> categories = connection.createQuery(sql, false)
+                    .executeAndFetch(GetCategoryDto.class);
 
             if (!categories.isEmpty()) return categories;
             else return null;

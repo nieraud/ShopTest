@@ -32,58 +32,11 @@ SET (name, description)
 = ('Accessories for laptops', 'This category contains accessories for laptops')
 WHERE uniqueid = '5dde1350-2354-462d-aea5-4c77c3eae2b1';
 
-INSERT INTO categories VALUES (DEFAULT, 'ololo', 'viv;v; r');
+INSERT INTO admins VALUES (DEFAULT, 'a663f44f-298c-43f2-850f-e06cafb28aa0', 4, 'test');
 
-INSERT INTO admins VALUES (DEFAULT, '28af5675-e563-431a-b565-91965e54fe09', 1, 'Owner');
-
-SELECT
-  admins.uniqueid,
-  admins.id_user,
-  admins.degree,
-  admins.roledescription,
-  users.firstname,
-  users.lastname,
-  users.birthday,
-  users.phonenumber,
-  users.datereg,
-  users.useremail
-FROM admins
-  INNER JOIN users ON admins.id_user = users.uniqueid
-WHERE admins.uniqueid = '25faaa9f-7be9-4c5a-aded-dc6310517a35';
-
-SELECT
-  subcategories.uniqueid,
-  subcategories.name,
-  subcategories.description,
-  subcategories.id_category,
-  categories.name,
-  categories.description
-FROM subcategories
-  INNER JOIN categories ON subcategories.id_category = categories.uniqueid
-WHERE subcategories.uniqueid = '43643d3f-b454-4197-9bbe-622ea16813ed';
-
-
-SELECT
-  admins.uniqueid,
-  admins.id_user,
-  admins.degree,
-  admins.roledescription,
-  users.firstname,
-  users.lastname,
-  users.birthday,
-  users.phonenumber,
-  users.datereg,
-  users.useremail
-FROM admins
-  INNER JOIN users ON admins.id_user = users.uniqueid
-WHERE admins.uniqueid = '25faaa9f-7be9-4c5a-aded-dc6310517a35';
-
-DELETE FROM admins
-WHERE degree = 3;
 
 SELECT *
 FROM users;
-
 SELECT *
 FROM admins;
 
@@ -93,7 +46,24 @@ FROM categories;
 SELECT *
 FROM subcategories;
 
+
+SELECT *
+FROM blacklist;
+
+
 SELECT *
 FROM products;
 
 
+SELECT
+  blacklist.uniqueid,
+  blacklist.notes,
+  blacklist.dateadded,
+  blacklist.id_user,
+  users.firstname,
+  users.lastname,
+  blacklist.id_adminadded
+FROM blacklist
+  INNER JOIN users ON blacklist.id_user = users.uniqueid
+  INNER JOIN admins ON blacklist.id_adminadded = admins.uniqueid
+WHERE blacklist.uniqueid = 'ed96f4df-bf7a-4967-8a6f-a0f3e9e29127';

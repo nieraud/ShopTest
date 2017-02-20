@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class Admins {
-    private UUID uniqueId;
+    private UUID uniqueid;
     private UUID id_user;
     private int degree;
     private String roledescription;

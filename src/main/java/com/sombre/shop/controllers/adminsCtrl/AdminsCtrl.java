@@ -36,16 +36,16 @@ public class AdminsCtrl {
         Users userFromDB = UsersCtrl.getUserDaoService().getUserByUserEmail(admin.getUseremail());
         if (userFromDB == null) return "Exception: User with this email is not registered!";
 
-        Admins adminFromDB = adminDaoService.getAdminByUserId(userFromDB.getUniqueId());
+        Admins adminFromDB = adminDaoService.getAdminByUserId(userFromDB.getUniqueid());
         if (adminFromDB == null) return "Exception: You are not admin!";
 
         if (UserSecurity.checkPassword(admin.getPassword(), userFromDB.getHashpassword())) {
 
-            String accessToken = UsersCtrl.getUserDaoService().getAccessTokenByUserId(userFromDB.getUniqueId());
+            String accessToken = UsersCtrl.getUserDaoService().getAccessTokenByUserId(userFromDB.getUniqueid());
 
             if (accessToken == null) {
                 accessToken = UserSecurity.generateAccessToken(userFromDB);
-                UsersCtrl.getUserDaoService().authorization(accessToken, userFromDB.getUniqueId());
+                UsersCtrl.getUserDaoService().authorization(accessToken, userFromDB.getUniqueid());
             }
             response.header("AccessToken", accessToken);
             response.status(HttpStatus.OK_200);

@@ -20,8 +20,8 @@ public class ProductsBySubcategoryDto {
     private boolean instock;
     private DateTime dateadded;
 
-    private UUID subcategoryId;
-    private String subcategoryName;
-    private String subcategoryDescription;
+    private UUID subcategoryid;
+    private String subname;
+    private String subdescription;
     private UUID id_category;
 }

@@ -24,12 +24,13 @@ public class AdminDaoService extends AbstractDaoService implements AdminReposito
     @Override
     public boolean addAdmin(AddAdminDto admin) {
 
-        String sql = "INSERT INTO admins VALUES(DEFAULT, :userId, :degree, :roledescr, DEFAULT);";
+        String sql = "INSERT INTO admins VALUES(DEFAULT, :userId, :degree, " +
+                ":roledescr, DEFAULT);";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
             connection.createQuery(sql, false)
-                    .addParameter("userId", admin.getUserId())
+                    .addParameter("userId", admin.getUserid())
                     .addParameter("degree", admin.getDegree())
                     .addParameter("roledescr", admin.getRoledescription())
                     .executeUpdate();
@@ -60,8 +61,8 @@ public class AdminDaoService extends AbstractDaoService implements AdminReposito
     @Override
     public boolean updateAdmin(UpdateAdminDto admin) {
 
-        String sql = "UPDATE admins SET (degree, roledescription) = (:degree, :roledescription)" +
-                " WHERE uniqueid = :id;";
+        String sql = "UPDATE admins SET (degree, roledescription) = (:degree, " +
+                ":roledescription) WHERE uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
@@ -97,9 +98,9 @@ public class AdminDaoService extends AbstractDaoService implements AdminReposito
     public GetAdminDto getAdminById(UUID adminId) {
 
         String sql = "SELECT admins.uniqueid, admins.id_user, admins.degree, " +
-                "admins.roledescription, admins.dateadded, users.firstname, users.lastname, users.birthday, " +
-                "users.phonenumber, users.datereg, users.useremail " +
-                "FROM admins " +
+                "admins.roledescription, admins.dateadded, users.firstname, " +
+                "users.lastname, users.birthday, users.phonenumber, users.datereg, " +
+                "users.useremail FROM admins " +
                 "INNER JOIN users ON admins.id_user = users.uniqueid " +
                 "WHERE admins.uniqueid = :id;";
 
@@ -120,9 +121,9 @@ public class AdminDaoService extends AbstractDaoService implements AdminReposito
     public List<GetAdminDto> getAllAdmins() {
 
         String sql = "SELECT admins.uniqueid, admins.id_user, admins.degree, " +
-                "admins.roledescription, admins.dateadded, users.firstname, users.lastname, users.birthday, " +
-                "users.phonenumber, users.datereg, users.useremail " +
-                "FROM admins " +
+                "admins.roledescription, admins.dateadded, users.firstname, " +
+                "users.lastname, users.birthday, users.phonenumber, users.datereg, " +
+                "users.useremail FROM admins " +
                 "INNER JOIN users ON admins.id_user = users.uniqueid;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {

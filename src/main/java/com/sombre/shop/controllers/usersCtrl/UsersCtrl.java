@@ -68,11 +68,11 @@ public class UsersCtrl {
 
         if (UserSecurity.checkPassword(user.getPassword(), userFromDB.getHashpassword())) {
 
-            String accessToken = userDaoService.getAccessTokenByUserId(userFromDB.getUniqueId());
+            String accessToken = userDaoService.getAccessTokenByUserId(userFromDB.getUniqueid());
 
             if (accessToken == null) {
                 accessToken = UserSecurity.generateAccessToken(userFromDB);
-                userDaoService.authorization(accessToken, userFromDB.getUniqueId());
+                userDaoService.authorization(accessToken, userFromDB.getUniqueid());
             }
             response.header("AccessToken", accessToken);
             response.status(HttpStatus.OK_200);
@@ -108,7 +108,7 @@ public class UsersCtrl {
 
         Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(user.getUniqueid());
         if (admin != null)
-            AdminsCtrl.getAdminDaoService().deleteAdmin(admin.getUniqueId());
+            AdminsCtrl.getAdminDaoService().deleteAdmin(admin.getUniqueid());
 
         if (userDaoService.deleteUser(user.getUniqueid())) {
 

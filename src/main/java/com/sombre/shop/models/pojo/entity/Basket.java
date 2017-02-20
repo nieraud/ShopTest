@@ -11,8 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class Basket {
-    private UUID uniqueId;
-    private UUID id_user;
+    private UUID uniqueid;
     private UUID id_product;
     private int count;
     private boolean confirmation;

@@ -1,6 +1,7 @@
 package com.sombre.shop.models.repositories.subcategoriesRepository;
 
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.AddSubcategoryDto;
+import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.UpdSubcategoryDto;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.output.SubcategoriesByIdDto;
 import com.sombre.shop.models.pojo.entity.SubCategories;
 
@@ -12,9 +13,9 @@ import java.util.UUID;
  */
 public interface SubcategoriesRepository {
 
-    boolean addSubcategory(AddSubcategoryDto subCategory);
+    boolean addSubcategory(AddSubcategoryDto subCategory, UUID adminId);
 
-    boolean updateSubcategory(SubCategories subCategory);
+    boolean updateSubcategory(UpdSubcategoryDto subCategory);
 
     boolean deleteSubcategory(UUID subCategoryId);
 

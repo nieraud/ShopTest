@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class SendEmail {
-    private UUID uniqueId;
+    private UUID uniqueid;
     private UUID id_user;
     private String message;
     private boolean status;

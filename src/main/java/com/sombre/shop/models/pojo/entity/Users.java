@@ -13,15 +13,14 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class Users {
-    private UUID uniqueId;
+    private UUID uniqueid;
     private String firstname;
     private String lastname;
     private Date birthday;
     private long phonenumber;
-    private DateTime dateReg;
+    private DateTime datereg;
     private String useremail;
     private byte[] hashpassword;
     private byte[] encryptionsalt;
     private byte[] accesstoken;
-
 }

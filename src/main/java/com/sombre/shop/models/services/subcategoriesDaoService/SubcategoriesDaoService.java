@@ -2,6 +2,7 @@ package com.sombre.shop.models.services.subcategoriesDaoService;
 
 import com.sombre.shop.models.factory.AbstractDaoFactory;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.AddSubcategoryDto;
+import com.sombre.shop.models.pojo.dto.subcategoriesDto.input.UpdSubcategoryDto;
 import com.sombre.shop.models.pojo.dto.subcategoriesDto.output.SubcategoriesByIdDto;
 import com.sombre.shop.models.pojo.entity.SubCategories;
 import com.sombre.shop.models.repositories.subcategoriesRepository.SubcategoriesRepository;
@@ -23,10 +24,11 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
     }
 
     @Override
-    public boolean addSubcategory(AddSubcategoryDto subCategory) {
+    public boolean addSubcategory(AddSubcategoryDto subCategory, UUID adminId) {
 
         String sql = "INSERT INTO subcategories " +
-                "VALUES(DEFAULT, :name, :description, :categoryId );";
+                "VALUES(DEFAULT, :name, :description, :categoryId, :adminId, " +
+                "DEFAULT );";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
@@ -34,6 +36,7 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
                     .addParameter("name", subCategory.getName())
                     .addParameter("description", subCategory.getDescription())
                     .addParameter("categoryId", subCategory.getCategoryid())
+                    .addParameter("adminId", adminId)
                     .executeUpdate();
             return true;
         } catch (Sql2oException e) {
@@ -42,7 +45,7 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
     }
 
     @Override
-    public boolean updateSubcategory(SubCategories subCategory) {
+    public boolean updateSubcategory(UpdSubcategoryDto subCategory) {
 
         String sql = "UPDATE subcategories SET (name, description) " +
                 "= (:name, :description) WHERE uniqueid = :id;";
@@ -52,7 +55,7 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
             connection.createQuery(sql, false)
                     .addParameter("name", subCategory.getName())
                     .addParameter("description", subCategory.getDescription())
-                    .addParameter("id", subCategory.getUniqueId())
+                    .addParameter("id", subCategory.getSubcategoryid())
                     .executeUpdate();
             return true;
         } catch (Sql2oException e) {
@@ -80,13 +83,18 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
     public SubcategoriesByIdDto getSubcategoryById(UUID subCategoryId) {
 
         String sql = "SELECT subcategories.uniqueid, " +
-                "subcategories.name AS subname, " +
-                "subcategories.description AS subdescription, " +
+                "subcategories.name, " +
+                "subcategories.description, " +
+                "subcategories.dateadded, " +
                 "subcategories.id_category, " +
-                "categories.name, " +
-                "categories.description " +
+                "categories.name AS catname, " +
+                "admins.uniqueid AS adminid, " +
+                "users.firstname, " +
+                "users.lastname " +
                 "FROM subcategories " +
                 "INNER JOIN categories ON subcategories.id_category = categories.uniqueid " +
+                "INNER JOIN admins ON subcategories.id_adminadded = admins.uniqueid " +
+                "INNER JOIN users ON admins.id_user = users.uniqueid " +
                 "WHERE subcategories.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
@@ -95,7 +103,6 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
                     .addParameter("id", subCategoryId)
                     .executeAndFetchFirst(SubcategoriesByIdDto.class);
 
-            System.out.println(subcategory.toString());
             if (subcategory != null) return subcategory;
             else return null;
         } catch (Sql2oException e) {
@@ -107,13 +114,18 @@ public class SubcategoriesDaoService extends AbstractDaoService implements Subca
     public List<SubcategoriesByIdDto> getAllSubcategoriesByCategoryId(UUID categoryId) {
 
         String sql = "SELECT subcategories.uniqueid, " +
-                "subcategories.name AS subname, " +
-                "subcategories.description AS subdescription, " +
+                "subcategories.name, " +
+                "subcategories.description, " +
+                "subcategories.dateadded, " +
                 "subcategories.id_category, " +
-                "categories.name, " +
-                "categories.description " +
+                "categories.name AS catName, " +
+                "admins.uniqueid AS subAdminId, " +
+                "users.firstname, " +
+                "users.lastname " +
                 "FROM subcategories " +
                 "INNER JOIN categories ON subcategories.id_category = categories.uniqueid " +
+                "INNER JOIN admins ON subcategories.id_adminadded = admins.uniqueid " +
+                "INNER JOIN users ON admins.id_user = users.uniqueid " +
                 "WHERE categories.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {

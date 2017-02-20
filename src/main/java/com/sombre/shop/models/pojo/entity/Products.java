@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class Products {
-    private UUID uniqueId;
+    private UUID uniqueid;
     private String name;
     private String photo;
     private String description;
@@ -20,4 +20,5 @@ public class Products {
     private boolean instock;
     private DateTime dateadded;
     private UUID id_subcategory;
+    private UUID id_admin;
 }

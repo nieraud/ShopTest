@@ -11,7 +11,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class AddAdminDto {
-    private UUID userId;
+    private UUID userid;
     private int degree;
     private String roledescription;
 }

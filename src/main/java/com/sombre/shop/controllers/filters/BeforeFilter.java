@@ -2,6 +2,7 @@ package com.sombre.shop.controllers.filters;
 
 import com.google.gson.Gson;
 import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
+import com.sombre.shop.controllers.adminsCtrl.blacklistCtrl.BlacklistCtrl;
 import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
 import com.sombre.shop.models.pojo.dto.UniqueIdDto;
 import com.sombre.shop.models.pojo.entity.Admins;
@@ -24,20 +25,26 @@ public class BeforeFilter {
     }
 
     @Getter
-    private static final Filter checkAuthorization = (request, response) -> {
+    private static final Filter checkAuthorizationAndBlacklist = (request, response) -> {
 
-        if (getUserByAccessToken(request.headers("Authorization")) == null) {
+        Users user = getUserByAccessToken(request.headers("Authorization"));
+        if (user == null) {
             halt(401, "Exception: You are unauthorized user!");
+        }
+
+        if (BlacklistCtrl.getBlacklistDaoService()
+                .getBlacklistByUserId(user.getUniqueid()) != null) {
+            halt(401, "Exception: Administrators added your account to blacklist.");
         }
     };
 
     @Getter
     private static final Filter ownerChecker = (request, response) -> {
 
-        Users owner =  getUserByAccessToken(request.headers("Authorization"));
+        Users owner = getUserByAccessToken(request.headers("Authorization"));
         ObjectConverterValidator.nullChecker(owner);
 
-        Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(owner.getUniqueId());
+        Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(owner.getUniqueid());
         if (admin == null || admin.getDegree() > 1) {
             halt(401, "Exception: You are not owner!");
         }
@@ -49,10 +56,10 @@ public class BeforeFilter {
         UniqueIdDto user = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(user);
 
-        Users userFromDb =  getUserByAccessToken(request.headers("Authorization"));
+        Users userFromDb = getUserByAccessToken(request.headers("Authorization"));
         ObjectConverterValidator.nullChecker(userFromDb);
 
-        if (user.getUniqueid() != userFromDb.getUniqueId()) {
+        if (user.getUniqueid() != userFromDb.getUniqueid()) {
             halt(401, "Exception: You can't use someone else's account!");
         }
 
@@ -64,12 +71,11 @@ public class BeforeFilter {
         Users userFromDb = getUserByAccessToken(request.headers("Authorization"));
         ObjectConverterValidator.nullChecker(userFromDb);
 
-        Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(userFromDb.getUniqueId());
+        Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(userFromDb.getUniqueid());
 
         if (admin == null) {
             halt(401, "Exception: You are not admin!");
         }
-
     };
 
 

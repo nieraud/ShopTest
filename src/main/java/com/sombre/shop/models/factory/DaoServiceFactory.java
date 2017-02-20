@@ -1,6 +1,7 @@
 package com.sombre.shop.models.factory;
 
 import com.sombre.shop.models.repositories.adminRepository.AdminRepository;
+import com.sombre.shop.models.repositories.blacklistRepository.BlacklistRepository;
 import com.sombre.shop.models.repositories.categoriesRepository.CategoriesRepository;
 import com.sombre.shop.models.repositories.productsRepository.ProductsRepository;
 import com.sombre.shop.models.repositories.subcategoriesRepository.SubcategoriesRepository;
@@ -31,7 +32,12 @@ public class DaoServiceFactory extends AbstractDaoFactory {
         return DAO_SERVICE.SUBCATEGORIES_REPOSITORY;
     }
 
-    public static ProductsRepository getProductsDaoService(){
+    public static ProductsRepository getProductsDaoService() {
         return DAO_SERVICE.PRODUCTS_REPOSITORY;
     }
+
+    public static BlacklistRepository getBlacklistDaoService() {
+        return DAO_SERVICE.BLACKLIST_REPOSITORY;
+    }
+
 }

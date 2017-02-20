@@ -2,6 +2,7 @@ package com.sombre.shop.models.pojo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.joda.time.DateTime;
 
 import java.util.UUID;
 
@@ -11,8 +12,10 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class SubCategories {
-    private UUID uniqueId;
+    private UUID uniqueid;
     private UUID id_category;
+    private UUID id_adminadded;
     private String name;
     private String description;
+    private DateTime dateadded;
 }
