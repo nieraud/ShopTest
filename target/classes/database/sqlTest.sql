@@ -48,11 +48,12 @@ FROM subcategories;
 
 
 SELECT *
+FROM products;
+
+SELECT *
 FROM blacklist;
 
 
-SELECT *
-FROM products;
 
 
 SELECT

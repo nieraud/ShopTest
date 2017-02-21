@@ -1,13 +1,17 @@
 package com.sombre.shop.controllers.productsCtrl;
 
 import com.google.gson.Gson;
+import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
+import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
 import com.sombre.shop.models.factory.DaoServiceFactory;
 import com.sombre.shop.models.pojo.dto.UniqueIdDto;
 import com.sombre.shop.models.pojo.dto.categoriesDto.input.AddCategoryDto;
 import com.sombre.shop.models.pojo.dto.productsDto.input.AddProductDto;
 import com.sombre.shop.models.pojo.dto.productsDto.input.NumberOfProductsOnPage;
 import com.sombre.shop.models.pojo.dto.productsDto.input.UpdateProductDto;
+import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Products;
+import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.productsRepository.ProductsRepository;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
@@ -31,7 +35,10 @@ public class ProductsCtrl {
         AddProductDto product = gson.fromJson(request.body(), AddProductDto.class);
         ObjectConverterValidator.nullChecker(product);
 
-        if (productsDaoService.addProduct(product)) {
+        Users user = UsersCtrl.getUserDaoService().getUserByAccessToken(request.headers("Authorization"));
+        Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(user.getUniqueid());
+
+        if (productsDaoService.addProduct(product, admin.getUniqueid())) {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("successfully");

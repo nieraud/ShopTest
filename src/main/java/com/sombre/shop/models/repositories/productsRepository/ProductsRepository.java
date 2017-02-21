@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public interface ProductsRepository {
 
-    boolean addProduct(AddProductDto product);
+    boolean addProduct(AddProductDto product, UUID adminId);
 
     boolean updateProduct (UpdateProductDto product);
 

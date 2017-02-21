@@ -23,9 +23,9 @@ public class ProductsDaoService extends AbstractDaoService implements ProductsRe
     }
 
     @Override
-    public boolean addProduct(AddProductDto product) {
+    public boolean addProduct(AddProductDto product, UUID adminId) {
         String sql = "INSERT INTO products VALUES (DEFAULT, :name, :photo, :description, " +
-                " :price, :instock, DEFAULT, :subcategoryId);";
+                " :price, :instock, DEFAULT, :subcategoryId, :adminId);";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
@@ -36,6 +36,7 @@ public class ProductsDaoService extends AbstractDaoService implements ProductsRe
                     .addParameter("price", product.getPrice())
                     .addParameter("instock", product.isInstock())
                     .addParameter("subcategoryId", product.getId_subcategory())
+                    .addParameter("adminId", adminId)
                     .executeUpdate();
             return true;
         } catch (Sql2oException e) {
@@ -47,7 +48,7 @@ public class ProductsDaoService extends AbstractDaoService implements ProductsRe
     public boolean updateProduct(UpdateProductDto product) {
 
         String sql = "UPDATE products SET (name, photo, description, price, instock, " +
-                " subcategoryId) = (:name, :photo, :description, :price,  :instock, " +
+                " id_subcategory) = (:name, :photo, :description, :price,  :instock, " +
                 " :subcategoryId) WHERE uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {

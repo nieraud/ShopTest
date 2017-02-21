@@ -65,7 +65,7 @@ public class Router implements Routing {
                     post("/upd", SubcategoriesCtrl.getUpdateSubcategory());
                     delete("/del", SubcategoriesCtrl.getDeleteSubcategory());
                 });
-//above tested
+
                 path("/product", () -> {
                     post("/add", ProductsCtrl.getAddProduct());
                     post("/upd", ProductsCtrl.getUpdateProduct());
@@ -91,6 +91,7 @@ public class Router implements Routing {
                 get("/all", ProductsCtrl.getAllProducts());
             });
 
+//above
             before("/own/*", BeforeFilter.getCheckRealUser());
             path("/own", () -> {
                 post("/upd", UsersCtrl.getUpdateUser());
@@ -103,6 +104,5 @@ public class Router implements Routing {
             });
 
         });//security
-
     }
 }
