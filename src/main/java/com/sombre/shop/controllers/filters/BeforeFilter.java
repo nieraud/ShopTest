@@ -33,7 +33,7 @@ public class BeforeFilter {
         }
 
         if (BlacklistCtrl.getBlacklistDaoService()
-                .getBlacklistByUserId(user.getUniqueid()) != null) {
+                .getFILTERBlacklistByUserId(user.getUniqueid()) != null) {
             halt(401, "Exception: Administrators added your account to blacklist.");
         }
     };

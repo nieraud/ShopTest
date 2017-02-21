@@ -6,6 +6,7 @@ import com.sombre.shop.models.pojo.dto.blacklistDto.input.UpdateBlacklistDto;
 import com.sombre.shop.models.pojo.dto.blacklistDto.output.AdminForBlacklistDto;
 import com.sombre.shop.models.pojo.dto.blacklistDto.output.GetBlacklistDto;
 import com.sombre.shop.models.pojo.dto.blacklistDto.output.IntermediateBlacklistDto;
+import com.sombre.shop.models.pojo.entity.Blacklist;
 import com.sombre.shop.models.repositories.blacklistRepository.BlacklistRepository;
 import com.sombre.shop.models.services.AbstractDaoService;
 import org.sql2o.Connection;
@@ -110,17 +111,16 @@ public class BlacklistDaoService extends AbstractDaoService implements Blacklist
                 "INNER JOIN admins ON blacklist.id_adminadded = admins.uniqueid " +
                 "WHERE blacklist.uniqueid = :id;";
 
-        String adminSql = "SELECT firstname, lastname FROM users " +
-                "WHERE admins.id_user = users.uniqueid " +
-                "AND admins.uniqueid = :id;";
+        String adminSql = "SELECT firstname AS adminsFirstname, " +
+                "lastname AS adminsLastname FROM users " +
+                "INNER JOIN admins ON users.uniqueid = admins.id_user " +
+                "WHERE admins.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().beginTransaction()) {
 
             IntermediateBlacklistDto intBlacklist = connection.createQuery(sql, false)
                     .addParameter("id", listId)
                     .executeAndFetchFirst(IntermediateBlacklistDto.class);
-
-            System.out.println(intBlacklist.toString());
 
             AdminForBlacklistDto admin = connection.createQuery(adminSql, false)
                     .addParameter("id", intBlacklist.getId_adminadded())
@@ -158,19 +158,18 @@ public class BlacklistDaoService extends AbstractDaoService implements Blacklist
                 "INNER JOIN admins ON blacklist.id_adminadded = admins.uniqueid " +
                 "WHERE blacklist.id_user = :id;";
 
-        String adminSql = "SELECT firstname, lastname FROM users " +
-                "WHERE users.uniqueid = admins.id_user " +
-                "AND admins.uniqueid = :id;";
+        String adminSql = "SELECT firstname AS adminsFirstname, " +
+                "lastname AS adminsLastname FROM users " +
+                "INNER JOIN admins ON users.uniqueid = admins.id_user " +
+                "WHERE admins.uniqueid = :id;";
 
-        try (Connection connection = daoFactory.getDataSource().open()) {
+        try (Connection connection = daoFactory.getDataSource().beginTransaction()) {
 
             IntermediateBlacklistDto intBlacklist = connection.createQuery(sql, false)
                     .addParameter("id", userId)
                     .executeAndFetchFirst(IntermediateBlacklistDto.class);
 
-            System.out.println(intBlacklist.toString());
-
-            /*AdminForBlacklistDto admin = connection.createQuery(adminSql, false)
+         AdminForBlacklistDto admin = connection.createQuery(adminSql, false)
                     .addParameter("id", intBlacklist.getId_adminadded())
                     .executeAndFetchFirst(AdminForBlacklistDto.class);
 
@@ -185,8 +184,24 @@ public class BlacklistDaoService extends AbstractDaoService implements Blacklist
                     intBlacklist.getId_adminadded(),
                     admin.getAdminsFirstname(),
                     admin.getAdminsLastname());
-*/ return null;
+
         } catch (Sql2oException e) {
+            throw new Sql2oException(e);
+        }
+    }
+
+    @Override
+    public Blacklist getFILTERBlacklistByUserId(UUID userId) {
+
+        String sql = "SELECT * FROM blacklist WHERE id_user = :id;";
+
+        try(Connection connection = daoFactory.getDataSource().open()){
+
+            return connection.createQuery(sql,false)
+                    .addParameter("id", userId)
+                    .executeAndFetchFirst(Blacklist.class);
+
+        }catch (Sql2oException e){
             throw new Sql2oException(e);
         }
     }

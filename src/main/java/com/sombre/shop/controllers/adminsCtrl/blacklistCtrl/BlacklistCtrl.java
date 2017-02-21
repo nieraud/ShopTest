@@ -89,19 +89,19 @@ public class BlacklistCtrl {
         return gson.toJson(blacklist);
     };
 
-/*
+
     @Getter
-    private static Route INFBlacklistByUserId = (request, response) -> {
+    private static Route blacklistByUserId = (request, response) -> {
         UniqueIdDto userId = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(userId);
 
-        GetBlacklistDto blacklist = blacklistDaoService.getINFBlacklistByUserId(userId.getUniqueid());
+        GetBlacklistDto blacklist = blacklistDaoService.getBlacklistByUserId(userId.getUniqueid());
         ObjectConverterValidator.nullChecker(blacklist);
 
         response.status(HttpStatus.OK_200);
         response.type("application/json");
         return gson.toJson(blacklist);
-    };*/
+    };
 
     @Getter
     private static Route allBlacklist = (request, response) -> {

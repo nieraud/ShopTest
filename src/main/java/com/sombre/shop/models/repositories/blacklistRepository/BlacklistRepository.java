@@ -18,6 +18,8 @@ public interface BlacklistRepository {
 
     GetBlacklistDto getBlacklistByUserId(UUID userId);
 
+    Blacklist getFILTERBlacklistByUserId(UUID userId);
+
     boolean addUserToBlacklist(AddBlacklistDto list, UUID adminId);
 
     boolean updateBlackList(UpdateBlacklistDto list);

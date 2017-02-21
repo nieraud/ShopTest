@@ -49,6 +49,7 @@ public class Router implements Routing {
                         post("/upd", BlacklistCtrl.getUpdateBlacklist());
                         delete("/del", BlacklistCtrl.getDeleteBlacklist());
                         post("/id", BlacklistCtrl.getBlacklistById());
+                        post("/user", BlacklistCtrl.getBlacklistByUserId());
                         get("/", BlacklistCtrl.getAllBlacklist());
                     });
                 });
