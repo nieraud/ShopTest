@@ -3,6 +3,7 @@ package com.sombre.shop.models.services.productsDaoService;
 import com.sombre.shop.models.factory.AbstractDaoFactory;
 import com.sombre.shop.models.pojo.dto.productsDto.input.AddProductDto;
 import com.sombre.shop.models.pojo.dto.productsDto.input.UpdateProductDto;
+import com.sombre.shop.models.pojo.dto.productsDto.output.ProductByIdDto;
 import com.sombre.shop.models.pojo.dto.productsDto.output.ProductsByCategoryDto;
 import com.sombre.shop.models.pojo.dto.productsDto.output.ProductsBySubcategoryDto;
 import com.sombre.shop.models.pojo.entity.Products;
@@ -87,15 +88,34 @@ public class ProductsDaoService extends AbstractDaoService implements ProductsRe
     }
 
     @Override
-    public Products getProductById(UUID productId) {
+    public ProductByIdDto getProductById(UUID productId) {
 
-        String sql = "SELECT * FROM products WHERE uniqueid = :id;";
+        String sql = "SELECT products.uniqueid, " +
+                "products.name, " +
+                "products.photo, " +
+                "products.description, " +
+                "products.price, " +
+                "products.instock, " +
+                "products.dateadded, " +
+                "products.id_subcategory, " +
+                "subcategories.name AS subName, " +
+                "subcategories.id_category, " +
+                "categories.name AS catName, " +
+                "products.id_admin, " +
+                "users.firstname, " +
+                "users.lastname " +
+                "FROM products " +
+                "INNER JOIN subcategories ON products.id_subcategory = subcategories.uniqueid " +
+                "INNER JOIN admins ON products.id_admin = admins.uniqueid " +
+                "INNER JOIN categories ON subcategories.id_category = categories.uniqueid " +
+                "INNER JOIN users ON admins.id_user = users.uniqueid " +
+                "WHERE products.uniqueid = :id;";
 
         try (Connection connection = daoFactory.getDataSource().open()) {
 
-            Products product = connection.createQuery(sql, false)
+            ProductByIdDto product = connection.createQuery(sql, false)
                     .addParameter("id", productId)
-                    .executeAndFetchFirst(Products.class);
+                    .executeAndFetchFirst(ProductByIdDto.class);
 
             if (product != null) return product;
             else return null;

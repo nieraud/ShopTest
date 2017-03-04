@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.container p {
+    width: 600px;
+    color: #333;
+    padding: 15px;
+    background-color: #f1f1f1;
+}
+
+.submit {
+    background-color: #f1f1f1;
+    padding: 10px 50px;
+    color: #333;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius:  5px;
+    border: 1px solid #666;
+}
+
+input {
+    border-radius: 5px;
+    border: 1px solid #666;
+    padding: 10px;
+    font-size: medium;
+}
+
+.checkbox {
+    vertical-align: top;
+    margin: 0 3px 0 0;
+    width: 17px;
+    height: 17px;
+    border-radius: 5px;
+}

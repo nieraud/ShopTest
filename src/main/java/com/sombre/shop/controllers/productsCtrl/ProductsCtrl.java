@@ -9,6 +9,7 @@ import com.sombre.shop.models.pojo.dto.categoriesDto.input.AddCategoryDto;
 import com.sombre.shop.models.pojo.dto.productsDto.input.AddProductDto;
 import com.sombre.shop.models.pojo.dto.productsDto.input.NumberOfProductsOnPage;
 import com.sombre.shop.models.pojo.dto.productsDto.input.UpdateProductDto;
+import com.sombre.shop.models.pojo.dto.productsDto.output.ProductByIdDto;
 import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Products;
 import com.sombre.shop.models.pojo.entity.Users;
@@ -77,13 +78,13 @@ public class ProductsCtrl {
         UniqueIdDto productId = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(productId);
 
-        Products product = productsDaoService.getProductById(productId.getUniqueid());
-        if (product != null) {
-            response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(product);
-        } else throw new NullPointerException();
+        ProductByIdDto product = productsDaoService.getProductById(productId.getUniqueid());
+        ObjectConverterValidator.nullChecker(product);
+
+        response.status(HttpStatus.OK_200);
+        response.type("application/json");
+        response.body("successfully");
+        return gson.toJson(product);
     };
 
     @Getter

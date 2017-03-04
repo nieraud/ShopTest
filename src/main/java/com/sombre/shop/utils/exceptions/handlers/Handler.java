@@ -37,11 +37,11 @@ public class Handler implements ExceptionHandler {
     private static final ExceptionHandler sql2oException = ((e, request, response) -> {
 
         Sql2oException exception = (Sql2oException) e;
-        response.body("Sql2oException");
-        //response.type("application/json");
-
+        response.body("Помилка серверу. Інф: Sql2oException");
+        response.type("application/json");
+        response.status(500);
+        //response.redirect("error.html");
         System.out.println(exception.getMessage());
-
     });
 
     @Getter

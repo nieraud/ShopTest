@@ -16,10 +16,13 @@ import com.sombre.shop.utils.security.UserSecurity;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
 import org.eclipse.jetty.http.HttpStatus;
+import spark.ModelAndView;
 import spark.Route;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static spark.Spark.halt;
 
@@ -32,12 +35,13 @@ public class UsersCtrl {
     private static final UserRepository userDaoService = DaoServiceFactory.getUserService();
     private static Gson gson = new Gson();
 
-
     @Getter
     private static final Route registrationUser = (request, response) -> {
 
+        System.out.println(request.body());
         UserRegistrationDto user = gson.fromJson(request.body(), UserRegistrationDto.class);
         ObjectConverterValidator.nullChecker(user);
+        System.out.println("userObject = "+user.toString());
 
         HashPasswordAndSaltDto security = UserSecurity.generateHashPassword(user.getPassword());
 
@@ -53,6 +57,9 @@ public class UsersCtrl {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
+            response.body("successfully");
+            System.out.println(gson.toJson(response.status()));
+
             return response;
         } else throw new Exception();
     };
@@ -68,17 +75,13 @@ public class UsersCtrl {
 
         if (UserSecurity.checkPassword(user.getPassword(), userFromDB.getHashpassword())) {
 
-            String accessToken = userDaoService.getAccessTokenByUserId(userFromDB.getUniqueid());
-
-            if (accessToken == null) {
-                accessToken = UserSecurity.generateAccessToken(userFromDB);
-                userDaoService.authorization(accessToken, userFromDB.getUniqueid());
-            }
+            String accessToken = UserSecurity.generateAccessToken(userFromDB);
+            userDaoService.authorization(accessToken, userFromDB.getUniqueid());
             response.header("AccessToken", accessToken);
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             response.body("user");
-            return gson.toJson(response.body());
+            return response;
         } else {
             return "Exception: Not correct password!";
         }
@@ -147,5 +150,6 @@ public class UsersCtrl {
             return gson.toJson(users);
         } else throw new NullPointerException();
     };
+
 
 }

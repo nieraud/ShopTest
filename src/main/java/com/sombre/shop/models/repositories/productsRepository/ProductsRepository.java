@@ -2,6 +2,7 @@ package com.sombre.shop.models.repositories.productsRepository;
 
 import com.sombre.shop.models.pojo.dto.productsDto.input.AddProductDto;
 import com.sombre.shop.models.pojo.dto.productsDto.input.UpdateProductDto;
+import com.sombre.shop.models.pojo.dto.productsDto.output.ProductByIdDto;
 import com.sombre.shop.models.pojo.dto.productsDto.output.ProductsByCategoryDto;
 import com.sombre.shop.models.pojo.dto.productsDto.output.ProductsBySubcategoryDto;
 import com.sombre.shop.models.pojo.entity.Products;
@@ -20,7 +21,7 @@ public interface ProductsRepository {
 
     boolean deleteProduct(UUID productId);
 
-    Products getProductById(UUID productId);
+    ProductByIdDto getProductById(UUID productId);
 
     List<ProductsBySubcategoryDto> gelAllProductsBySubcategoryId(UUID subcategoryId);
 

@@ -18,6 +18,7 @@ CREATE TABLE test (
 DELETE FROM admins
 WHERE uniqueid = '3a33af2c-9349-4441-9f16-f17b6b27db73';
 
+
 SELECT *
 FROM users;
 

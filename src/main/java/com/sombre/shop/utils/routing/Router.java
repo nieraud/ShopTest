@@ -7,17 +7,20 @@ import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
 import com.sombre.shop.controllers.productsCtrl.ProductsCtrl;
 import com.sombre.shop.controllers.subcategoriesCtrl.SubcategoriesCtrl;
 import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
-import com.sombre.shop.models.pojo.entity.Blacklist;
-import com.sombre.shop.models.repositories.productsRepository.ProductsRepository;
-import lombok.NonNull;
+
 
 import static spark.Spark.*;
+import static spark.Spark.get;
 
 /**
  * Created by inna on 08.02.17.
  */
 public class Router implements Routing {
     public void init() {
+
+        staticFiles.location("/public");
+
+        get("/", (req, res) -> {res.redirect("index.html");return null;});
 
         post("/admins/auth", AdminsCtrl.getAuthorizationAdmin());
 
@@ -44,7 +47,7 @@ public class Router implements Routing {
                     post("/id", UsersCtrl.getUserById());
                     get("/all", UsersCtrl.getAllUsers());
 
-                    path("/blacklist", ()->{
+                    path("/blacklist", () -> {
                         post("/add", BlacklistCtrl.getAddUserToBlackList());
                         post("/upd", BlacklistCtrl.getUpdateBlacklist());
                         delete("/del", BlacklistCtrl.getDeleteBlacklist());
@@ -84,14 +87,14 @@ public class Router implements Routing {
                 post("/category", SubcategoriesCtrl.getAllSubcategoriesByCategory());
             });
 
-            path("/products", () -> {
+//above
+            path("/product", () -> {
                 post("/id", ProductsCtrl.getProductById());
                 post("/subcategory", ProductsCtrl.getAllProductsBySubcategory());
                 post("/category", ProductsCtrl.getAllProductsByCategory());
                 get("/all", ProductsCtrl.getAllProducts());
             });
 
-//above
             before("/own/*", BeforeFilter.getCheckRealUser());
             path("/own", () -> {
                 post("/upd", UsersCtrl.getUpdateUser());
