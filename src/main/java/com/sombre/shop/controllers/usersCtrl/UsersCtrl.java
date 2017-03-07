@@ -38,10 +38,8 @@ public class UsersCtrl {
     @Getter
     private static final Route registrationUser = (request, response) -> {
 
-        System.out.println(request.body());
         UserRegistrationDto user = gson.fromJson(request.body(), UserRegistrationDto.class);
         ObjectConverterValidator.nullChecker(user);
-        System.out.println("userObject = "+user.toString());
 
         HashPasswordAndSaltDto security = UserSecurity.generateHashPassword(user.getPassword());
 
@@ -80,10 +78,12 @@ public class UsersCtrl {
             response.header("AccessToken", accessToken);
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            response.body("user");
             return response;
         } else {
-            return "Exception: Not correct password!";
+            response.header("AccessToken", null);
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            response.type("application/json");
+            return response;
         }
     };
 

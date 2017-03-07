@@ -1,16 +1,16 @@
 package com.sombre.shop;
 
 import com.sombre.shop.utils.exceptions.ExceptionService;
-import com.sombre.shop.utils.exceptions.ExcetionRouting;
+import com.sombre.shop.utils.exceptions.ExceptionRouting;
 import com.sombre.shop.utils.routing.Router;
 import com.sombre.shop.utils.routing.Routing;
 
 /**
  * Created by inna on 08.02.17.
  */
-public class StarterFacade {
+class StarterFacade {
 
-    public static void start() {
+    static void start() {
 
         initExceptionService();
         initRoutingService();
@@ -26,7 +26,7 @@ public class StarterFacade {
 
     private static void initExceptionService() {
 
-        ExcetionRouting r = new ExceptionService();
+        ExceptionRouting r = new ExceptionService();
         r.init();
 
     }

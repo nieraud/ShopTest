@@ -12,7 +12,7 @@ import static spark.Spark.notFound;
 /**
  * Created by inna on 08.02.17.
  */
-public class ExceptionService implements ExcetionRouting {
+public class ExceptionService implements ExceptionRouting {
     public void init() {
 
         internalServerError(Handler.getInternalServerError());

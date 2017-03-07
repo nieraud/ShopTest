@@ -18,9 +18,17 @@ import static spark.Spark.get;
 public class Router implements Routing {
     public void init() {
 
+        // Configure Spark
+        port(4567);
         staticFiles.location("/public");
 
+       /* // Set up before-filters (called before each get/post)
+        before("*", Filters.getAddTrailingSlashes());
+        before("*", Filters.getHandleLocaleChange());*/
+
+        //index
         get("/", (req, res) -> {res.redirect("index.html");return null;});
+
 
         post("/admins/auth", AdminsCtrl.getAuthorizationAdmin());
 
