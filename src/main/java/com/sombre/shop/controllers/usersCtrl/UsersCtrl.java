@@ -12,9 +12,11 @@ import com.sombre.shop.models.pojo.dto.userDto.output.UserForAddingToDBDto;
 import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.userRepository.UserRepository;
+import com.sombre.shop.utils.exceptions.exceptions.UnauthorizedException;
 import com.sombre.shop.utils.security.UserSecurity;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.ModelAndView;
 import spark.Route;
@@ -55,11 +57,8 @@ public class UsersCtrl {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            response.body("successfully");
-            System.out.println(gson.toJson(response.status()));
-
             return response;
-        } else throw new Exception();
+        } else throw new InternalError();
     };
 
     @Getter
@@ -69,24 +68,24 @@ public class UsersCtrl {
         ObjectConverterValidator.nullChecker(user);
 
         Users userFromDB = userDaoService.getUserByUserEmail(user.getUseremail());
-        if (userFromDB == null) return "Exception: User with this email is not registered!";
+        if (userFromDB == null) return new UnauthorizedException();
 
         if (UserSecurity.checkPassword(user.getPassword(), userFromDB.getHashpassword())) {
+            String accessToken = userDaoService.getAccessTokenByUserId(userFromDB.getUniqueid());
+            if(accessToken == null) {
+                accessToken =  UserSecurity.generateAccessToken(userFromDB);
+                userDaoService.authorization(accessToken, userFromDB.getUniqueid());
+            }
+            request.session(true);
+            request.session().attribute("AccessToken", accessToken);
 
-            String accessToken = UserSecurity.generateAccessToken(userFromDB);
-            userDaoService.authorization(accessToken, userFromDB.getUniqueid());
-            response.header("AccessToken", accessToken);
+            response.header(HttpHeader.AUTHORIZATION.asString(), accessToken);
             response.status(HttpStatus.OK_200);
             response.type("application/json");
+            response.redirect("html/home.html");
             return response;
-        } else {
-            response.header("AccessToken", null);
-            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-            response.type("application/json");
-            return response;
-        }
+        } else return new UnauthorizedException();
     };
-
 
     @Getter
     private static final Route updateUser = (request, response) -> {
@@ -100,8 +99,7 @@ public class UsersCtrl {
             response.body("user updated");
             return gson.toJson(response.body());
         } else throw new Exception();
-
-
+        
     };
 
     @Getter

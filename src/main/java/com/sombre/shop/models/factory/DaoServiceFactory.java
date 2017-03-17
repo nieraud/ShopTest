@@ -13,7 +13,7 @@ import org.sql2o.Sql2o;
  */
 public class DaoServiceFactory extends AbstractDaoFactory {
     public Sql2o getDataSource() {
-        return AbstractDaoFactory.getInstace().getDataSource();
+        return AbstractDaoFactory.getInstance().getDataSource();
     }
 
     public static UserRepository getUserService() {

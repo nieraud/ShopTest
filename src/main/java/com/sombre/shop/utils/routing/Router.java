@@ -1,5 +1,6 @@
 package com.sombre.shop.utils.routing;
 
+import com.google.gson.Gson;
 import com.sombre.shop.controllers.adminsCtrl.blacklistCtrl.BlacklistCtrl;
 import com.sombre.shop.controllers.categoriesCtrl.CategoriesCtrl;
 import com.sombre.shop.controllers.filters.BeforeFilter;
@@ -7,6 +8,7 @@ import com.sombre.shop.controllers.adminsCtrl.AdminsCtrl;
 import com.sombre.shop.controllers.productsCtrl.ProductsCtrl;
 import com.sombre.shop.controllers.subcategoriesCtrl.SubcategoriesCtrl;
 import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
+import com.sombre.shop.models.pojo.entity.Admins;
 
 
 import static spark.Spark.*;
@@ -22,18 +24,21 @@ public class Router implements Routing {
         port(4567);
         staticFiles.location("/public");
 
-       /* // Set up before-filters (called before each get/post)
-        before("*", Filters.getAddTrailingSlashes());
-        before("*", Filters.getHandleLocaleChange());*/
-
         //index
-        get("/", (req, res) -> {res.redirect("index.html");return null;});
+        get("/", (req, res) -> {res.redirect("html/index.html");return null;});
 
-
-        post("/admins/auth", AdminsCtrl.getAuthorizationAdmin());
+       /* post("/test", (request, response) -> {
+            System.out.println(request.body());
+            return"ok";
+        });*/
 
         post("/reg", UsersCtrl.getRegistrationUser());
+
+        post("/auth/adm", AdminsCtrl.getAuthorizationAdmin());
         post("/auth", UsersCtrl.getAuthorization());
+
+        //get("/singout", UsersCtrl.getSingOut());
+        get("/singout", AdminsCtrl.getSingOut()); //(users+)
 
         before("/sec/*", BeforeFilter.getCheckAuthorizationAndBlacklist());
         path("/sec", () -> {
@@ -48,7 +53,7 @@ public class Router implements Routing {
             before("/admin/*", BeforeFilter.getAdminChecker());
             path("/admin", () -> {
 
-                post("/id", AdminsCtrl.getAdmin());
+                get("/:id", AdminsCtrl.getAdmin());
                 get("/all", AdminsCtrl.getAllAdmins());
 
                 path("/user", () -> {
@@ -95,7 +100,6 @@ public class Router implements Routing {
                 post("/category", SubcategoriesCtrl.getAllSubcategoriesByCategory());
             });
 
-//above
             path("/product", () -> {
                 post("/id", ProductsCtrl.getProductById());
                 post("/subcategory", ProductsCtrl.getAllProductsBySubcategory());
@@ -103,6 +107,7 @@ public class Router implements Routing {
                 get("/all", ProductsCtrl.getAllProducts());
             });
 
+//above
             before("/own/*", BeforeFilter.getCheckRealUser());
             path("/own", () -> {
                 post("/upd", UsersCtrl.getUpdateUser());

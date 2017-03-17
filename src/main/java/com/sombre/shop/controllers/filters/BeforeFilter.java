@@ -9,6 +9,7 @@ import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
+import org.eclipse.jetty.http.HttpHeader;
 import spark.Filter;
 
 import static spark.Spark.halt;
@@ -27,7 +28,7 @@ public class BeforeFilter {
     @Getter
     private static final Filter checkAuthorizationAndBlacklist = (request, response) -> {
 
-        Users user = getUserByAccessToken(request.headers("Authorization"));
+        Users user = getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
         if (user == null) {
             halt(401, "Exception: You are unauthorized user!");
         }
@@ -41,7 +42,7 @@ public class BeforeFilter {
     @Getter
     private static final Filter ownerChecker = (request, response) -> {
 
-        Users owner = getUserByAccessToken(request.headers("Authorization"));
+        Users owner = getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
         ObjectConverterValidator.nullChecker(owner);
 
         Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(owner.getUniqueid());
@@ -56,7 +57,7 @@ public class BeforeFilter {
         UniqueIdDto user = gson.fromJson(request.body(), UniqueIdDto.class);
         ObjectConverterValidator.nullChecker(user);
 
-        Users userFromDb = getUserByAccessToken(request.headers("Authorization"));
+        Users userFromDb = getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
         ObjectConverterValidator.nullChecker(userFromDb);
 
         if (user.getUniqueid() != userFromDb.getUniqueid()) {
@@ -68,7 +69,7 @@ public class BeforeFilter {
     @Getter
     private static final Filter adminChecker = (request, response) -> {
 
-        Users userFromDb = getUserByAccessToken(request.headers("Authorization"));
+        Users userFromDb = getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
         ObjectConverterValidator.nullChecker(userFromDb);
 
         Admins admin = AdminsCtrl.getAdminDaoService().getAdminByUserId(userFromDb.getUniqueid());

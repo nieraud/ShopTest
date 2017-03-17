@@ -11,23 +11,17 @@ import com.sombre.shop.utils.routing.Routing;
 class StarterFacade {
 
     static void start() {
-
         initExceptionService();
         initRoutingService();
-
-
     }
 
     private static void initRoutingService() {
-
         Routing router = new Router();
         router.init();
     }
 
     private static void initExceptionService() {
-
         ExceptionRouting r = new ExceptionService();
         r.init();
-
     }
 }

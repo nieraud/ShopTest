@@ -6,7 +6,7 @@ import org.sql2o.Sql2o;
 /**
  * Created by inna on 11.02.17.
  */
-public class AbstractDaoService {
+public class    AbstractDaoService {
     protected AbstractDaoFactory daoFactory;
 
     public AbstractDaoService(AbstractDaoFactory daoFactory ) {

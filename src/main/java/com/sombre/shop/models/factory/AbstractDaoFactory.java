@@ -24,27 +24,27 @@ public abstract class AbstractDaoFactory implements DataSource {
     static class DAO_SERVICE {
 
         static final UserRepository USER_REPOSITORY
-                = new UserDaoService(getInstace());
+                = new UserDaoService(getInstance());
 
         static final AdminRepository ADMIN_REPOSITORY
-                = new AdminDaoService(getInstace());
+                = new AdminDaoService(getInstance());
 
         static final CategoriesRepository CATEGORIES_REPOSITORY
-                = new CategoriesDaoService(getInstace());
+                = new CategoriesDaoService(getInstance());
 
         static final SubcategoriesRepository SUBCATEGORIES_REPOSITORY
-                = new SubcategoriesDaoService(getInstace());
+                = new SubcategoriesDaoService(getInstance());
 
         static final ProductsRepository PRODUCTS_REPOSITORY
-                = new ProductsDaoService(getInstace());
+                = new ProductsDaoService(getInstance());
 
         static final BlacklistRepository BLACKLIST_REPOSITORY
-                = new BlacklistDaoService(getInstace());
+                = new BlacklistDaoService(getInstance());
 
 
     }
 
-    public static AbstractDaoFactory getInstace() {
+    public static AbstractDaoFactory getInstance() {
         return PgDataSource.getInstance();
     }
 

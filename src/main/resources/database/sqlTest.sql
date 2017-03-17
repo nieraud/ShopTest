@@ -19,11 +19,7 @@ DELETE FROM admins
 WHERE uniqueid = '3a33af2c-9349-4441-9f16-f17b6b27db73';
 
 
-SELECT *
-FROM users;
 
-SELECT *
-FROM admins;
 
 SELECT *
 FROM categories;
@@ -33,7 +29,7 @@ SET (name, description)
 = ('Accessories for laptops', 'This category contains accessories for laptops')
 WHERE uniqueid = '5dde1350-2354-462d-aea5-4c77c3eae2b1';
 
-INSERT INTO admins VALUES (DEFAULT, 'a663f44f-298c-43f2-850f-e06cafb28aa0', 4, 'test');
+INSERT INTO admins VALUES (DEFAULT, '0fcdbe32-11ac-438d-a763-041d1ffbcfd3', 1, 'Owner');
 
 
 SELECT *

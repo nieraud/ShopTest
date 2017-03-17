@@ -1,0 +1,27 @@
+<!DOCTYPE html >
+<html lang="en" ng-app="adminHome">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+
+<div>
+    <ul>
+        <li ng-repeat="user in bla.products"> {{ products.name }}</li>
+    </ul>
+</div>
+<script>
+    app.controller('prCtrl', ['$scope', 'NFactory', function ($scope, NFactory) {
+        alert("here??");
+        $scope.bla = NFactory.query;
+        alert("here??" + $scope.bla);
+
+        NFactory.get({}, function (nFactory) {
+            $scope.allposts = nFactory.firstname;
+        })
+    }]);
+</script>
+</body>
+</html>

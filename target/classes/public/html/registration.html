@@ -2,10 +2,96 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>REGISTRATION</title>
+    <title>Реєстрація</title>
+    <link rel="stylesheet" type="text/css" href="../styles/style.css">
+    <script src="../js/jquery-3.1.1.min.js"></script>
 </head>
+
 <body>
-<h1>The marvellous blog of mine</h1>
+
+<div class="container">
+
+    <form id="myForm">
+        <div>
+            <p style="background-color: rgba(148, 169, 125, 0.34) ">Реєстрація</p>
+        </div>
+
+        <p>Ім'я <input name="firstname" id="firstname" type="text"/>
+            <span style="color:red" id="fname"></span>
+        </p>
+        <p>Прізвище <input id="lastname" name="lastname" type="text"/>
+            <span style="color:red" id="lname"></span>
+        </p>
+        <p>Дата народження <input id="birthday" name="birthday" type="date"/>
+            <span style="color:red" id="bday"></span>
+        </p>
+        <p>Номер телефону <input id="phonenumber" name="phonenumber" type="tel"/>
+            <span style="color:red" id="numb"></span>
+        </p>
+        <p>E-mail <input id="useremail" name="useremail" type="email"/>
+            <span style="color:red" id="email"></span>
+        </p>
+        <p>Пароль <input id="password" name="password" type="password"/>
+            <span style="color:red" id="pass"></span>
+        </p>
+        <!--<p>Повторіть пароль <input id="password1" name="password1" type="password"/>
+            <span style="color:red" id="pass1"></span>
+        </p>-->
+        <button class="submit" type="button" onclick="send(); return false;"> Зареєструвати</button>
+    </form>
+</div>
 
 </body>
+<script>
+
+    function send() {
+        if (validate()) {
+            var firstname = $('#firstname').val();
+            var lastname = $('#lastname').val();
+            var birthday = $('#birthday').val();
+            var phonenumber = $('#phonenumber').val();
+            var useremail = $('#useremail').val();
+            var password = $('#password').val();
+
+            var json = {
+                firstname: firstname,
+                lastname: lastname,
+                birthday: birthday,
+                phonenumber: phonenumber,
+                useremail: useremail,
+                password: password
+            }
+
+            $.ajax({
+                url: "http://0.0.0.0:4567/reg",
+                data: JSON.stringify(json),
+                dataType: 'jsonp',
+                type: 'post',
+                statusCode: {
+                    200: function () {
+                        window.location = 'http://0.0.0.0:4567/';
+                    },
+                    500: function () {
+                        alert('Помилка серверу! ');
+                    }
+                }
+            });
+        }
+
+    }
+
+
+    function validate() {
+        var valid = true;
+        $('#myForm input').each(function () {
+            if ($(this).val() == '') {
+                valid = false;
+                $(this).next().html('Заповніть поле!');
+            } else {
+                $(this).next().html('');
+            }
+        });
+        return valid;
+    }
+</script>
 </html>

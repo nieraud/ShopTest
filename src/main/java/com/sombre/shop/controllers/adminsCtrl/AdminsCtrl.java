@@ -11,13 +11,20 @@ import com.sombre.shop.models.pojo.dto.userDto.input.UserAuthorizationDto;
 import com.sombre.shop.models.pojo.entity.Admins;
 import com.sombre.shop.models.pojo.entity.Users;
 import com.sombre.shop.models.repositories.adminRepository.AdminRepository;
+import com.sombre.shop.utils.exceptions.exceptions.NotAdminException;
+import com.sombre.shop.utils.exceptions.exceptions.UnauthorizedException;
 import com.sombre.shop.utils.security.UserSecurity;
 import com.sombre.shop.utils.validator.ObjectConverterValidator;
 import lombok.Getter;
+import org.eclipse.jetty.http.HttpContent;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpStatus;
+import spark.Request;
+import spark.Response;
 import spark.Route;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by inna on 15.02.17.
@@ -34,10 +41,10 @@ public class AdminsCtrl {
         ObjectConverterValidator.nullChecker(admin);
 
         Users userFromDB = UsersCtrl.getUserDaoService().getUserByUserEmail(admin.getUseremail());
-        if (userFromDB == null) return "Exception: User with this email is not registered!";
+        if (userFromDB == null) return new UnauthorizedException();
 
         Admins adminFromDB = adminDaoService.getAdminByUserId(userFromDB.getUniqueid());
-        if (adminFromDB == null) return "Exception: You are not admin!";
+        if (adminFromDB == null) return new NotAdminException();
 
         if (UserSecurity.checkPassword(admin.getPassword(), userFromDB.getHashpassword())) {
 
@@ -47,14 +54,26 @@ public class AdminsCtrl {
                 accessToken = UserSecurity.generateAccessToken(userFromDB);
                 UsersCtrl.getUserDaoService().authorization(accessToken, userFromDB.getUniqueid());
             }
-            response.header("AccessToken", accessToken);
+
+            request.session(true);
+            request.session().attribute("AccessToken", accessToken);
+
+            response.header(HttpHeader.AUTHORIZATION.asString(), accessToken);
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("admin");
-            return gson.toJson(response.body());
-        } else {
-            return "Exception: Not correct password!";
-        }
+            return response;
+        } else return new UnauthorizedException();
+    };
+
+    @Getter
+    private static Route singOut = (request, response) -> {
+
+        request.session().attribute("AccessToken", null);
+
+        response.header(HttpHeader.AUTHORIZATION.asString(), null);
+        response.status(HttpStatus.OK_200);
+        response.type("application/json");
+        response.redirect("/htmlindex.html");
+        return null;
     };
 
     @Getter
@@ -100,16 +119,16 @@ public class AdminsCtrl {
 
     @Getter
     private static final Route admin = (request, response) -> {
-        UniqueIdDto admin = gson.fromJson(request.body(), UniqueIdDto.class);
-        ObjectConverterValidator.nullChecker(admin);
+        //UniqueIdDto admin = gson.fromJson(request.body(), UniqueIdDto.class);
+        UUID adminId = UUID.fromString(request.params("id"));
+        ObjectConverterValidator.nullChecker(adminId);
 
-        GetAdminDto adminFromDb = adminDaoService.getAdminById(admin.getUniqueid());
+        GetAdminDto adminFromDb = adminDaoService.getAdminById(adminId);
 
         if (adminFromDb != null) {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(adminFromDb);
+            return response;
         } else throw new NullPointerException();
     };
 
@@ -122,8 +141,7 @@ public class AdminsCtrl {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(adminFromDb);
+            return response;
         } else throw new NullPointerException();
     };
 

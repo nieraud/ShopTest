@@ -1,5 +1,6 @@
 package com.sombre.shop.utils.exceptions;
 
+import com.sombre.shop.utils.exceptions.exceptions.UnauthorizedException;
 import com.sombre.shop.utils.exceptions.handlers.Handler;
 import org.sql2o.Sql2oException;
 
@@ -23,6 +24,15 @@ public class ExceptionService implements ExceptionRouting {
         exception(Sql2oException.class, Handler.getSql2oException());
 
         exception(ParseException.class, Handler.getParseException());
+
+        //exception(UnauthorizedException.class, Handler.getUnauthorizedException());
+
+        exception(UnauthorizedException.class, (e, request, response) -> {
+            response.status(401);
+            response.type("application/json");
+            System.out.println(response.status());
+        });
+
 
 
     }
