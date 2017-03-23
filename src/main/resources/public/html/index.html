@@ -1,26 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="indexApp">
 <head>
     <meta charset="UTF-8">
     <title>SombraShop</title>
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
 </head>
 <body>
-<div class="container">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
+
+<div class="container" ng-controller="indexCtrl">
     <div>
-        <p style="text-align: center;
-        background-color: rgba(148, 169, 125, 0.34)">Інтернет магазин SombraShop!</p>
-        <p style="text-align: center;
-        background-color: rgba(148, 169, 125, 0.21)">Оберіть дію:</p>
-        <form >
-            <p style="text-align: center">
-                <button class = "submit" formaction = "registration.html">Реєстрація</button>
-                <button class = "submit" formaction = "authorization.html">Вхід</button>
+        <span class="sombra">SombraShop</span><br><br>
+        <span class="descr"> Internet-shop </span>
+        <form>
+            <p class="butt" style="text-align: center">
+                <button class="submit" ng-click="goToReg()" >Sing Up</button>
+                <button class="submit" ng-click="goToAuth()" >Log In</button>
             </p>
         </form>
-
     </div>
 </div>
-
 </body>
+<script>
+    var app = angular.module('indexApp', ['ngCookies']);
+    app.controller('indexCtrl',
+            ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
+
+                if ($cookies.get('token').indexOf('$2a$10$') != -1) {
+                    $window.location.href = '/html/home.html';
+                }
+
+                $scope.goToAuth = function () {
+                    $window.location.href = '/html/authorization.html'
+                }
+
+                $scope.goToReg = function () {
+                    //formaction="authorization.html"
+                    $window.location.href = '/html/registration.html'
+                }
+
+            }]);
+</script>
 </html>

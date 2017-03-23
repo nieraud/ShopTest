@@ -1,13 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html >
+<html lang="en" ng-app="sombraApp">
 <head>
     <meta charset="UTF-8">
     <title>SombraShop</title>
+    <link rel="stylesheet" type="text/css" href="../styles/homeStyle.css">
 </head>
-<body>
-<p>
-    User's home!!
-</p>
+<body ng-controller="checkCookieCtrl">
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
+
+<div class="toolBar" ng-controller="ctrlSombra">
+    <span class="sombra">Sombra Shop</span>
+    <input class="search" placeholder="Search" type="text"/>
+    <select>
+        <option>All Categories</option>
+        <option>Category 1</option>
+    </select>
+    <button class="submit">Go</button>
+
+    <span class="rightToolBox">
+        <button ng-click="logOutCtrl()" class="submit">Log Out</button>
+        <button class="admin-{{adminBool}}">Management</button>
+        <select>
+            <option>Languages</option>
+            <option>Ukrainian</option>
+            <option>English</option>
+        </select>
+    </span>
+</div>
+
+
+<div class="navigation">
+    <button class="submit">
+        navigation1
+    </button>
+    <button class="submit">
+        navigation2
+    </button>
+    <button class="submit">
+        navigation2
+    </button>
+</div>
+
+
+<div class="all">
+    <ul>
+        <li ng-repeat="item in items">
+            <div class="slots">
+                {{item.name}}
+            </div>
+            <!--<div class="slots">
+                second elem
+            </div>
+            <div class="slots">
+                third elem
+            </div>
+            <div class="slots">
+                fourth elem
+            </div>-->
+        </li>
+    </ul>
+
+</div>
+<div class="navigation"> Info panel</div>
 
 </body>
+<script>
+    var app = angular.module('sombraApp', ['ngCookies']);
+
+    app.controller('checkCookieCtrl',
+            ['$scope', '$window', '$cookies', function ($scope, $window, $cookies) {
+
+                if ($cookies.get('token').indexOf('$2a$10$') == -1)
+                    $window.location.href = '/html/authorization.html';
+
+            }]);
+
+    app.controller('ctrlSombra',
+            ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
+
+                $scope.adminBool = $cookies.get('admin').indexOf('true') !== -1;
+
+                $scope.logOutCtrl = function () {
+                    $cookies.put('token', null);
+                    if ($scope.adminBool)
+                        $cookies.put('admin', null);
+                    $window.location.href = '/html/index.html';
+                };
+
+
+                $scope.items = $http({
+                    method: "GET",
+                    url: "http://0.0.0.0:4567/sec/product/all",
+                    headers: {
+                        'Authorization': $cookies.get('token')
+                    }
+                }).then(function success(response) {
+                    console.log("SUCCESS = " + response.statusText);
+                }, function exception(response) {
+                    console.log("ERROR = " + response.statusText);
+                    alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
+                });
+
+
+            }]);
+</script>
 </html>

@@ -25,15 +25,19 @@ public class ExceptionService implements ExceptionRouting {
 
         exception(ParseException.class, Handler.getParseException());
 
-        //exception(UnauthorizedException.class, Handler.getUnauthorizedException());
+        exception(UnauthorizedException.class, Handler.getUnauthorizedException());
 
-        exception(UnauthorizedException.class, (e, request, response) -> {
-            response.status(401);
+      /*  exception(NullPointerException.class, (exception, request, response) -> {
             response.type("application/json");
-            System.out.println(response.status());
+            response.status(404);
+            System.out.println("{\"message\":\"Custom 404\"}" + "\n "+exception.getMessage());
         });
 
-
+        exception(NullPointerException.class, (exception, request, response) -> {
+            response.type("application/json");
+            response.status(500);
+            System.out.println("{\"message\":\"Custom 500 handling\"}" + "\n"+exception.getMessage());
+        });*/
 
     }
 }

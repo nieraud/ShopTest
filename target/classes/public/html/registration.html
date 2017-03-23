@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Реєстрація</title>
+    <title>Sing Up</title>
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
     <script src="../js/jquery-3.1.1.min.js"></script>
 </head>
@@ -12,32 +12,42 @@
 <div class="container">
 
     <form id="myForm">
-        <div>
-            <p style="background-color: rgba(148, 169, 125, 0.34) ">Реєстрація</p>
-        </div>
-
-        <p>Ім'я <input name="firstname" id="firstname" type="text"/>
-            <span style="color:red" id="fname"></span>
+        <span class="singUp">Sing Up</span><br><br>
+        <br>
+        <p class="butt" style="text-align: center">
+            <label class="buttSingUp">First name <input name="firstname" id="firstname" type="text"
+                                                        placeholder="First name"/>
+                <span class="error" id="fname"></span>
+            </label><br>
         </p>
-        <p>Прізвище <input id="lastname" name="lastname" type="text"/>
-            <span style="color:red" id="lname"></span>
+        <p class="butt" style="text-align: center">
+            <label>Last name <input id="lastname" name="lastname" type="text" placeholder="Last name"/>
+                <span class="error" id="lname"></span>
+            </label><br>
         </p>
-        <p>Дата народження <input id="birthday" name="birthday" type="date"/>
-            <span style="color:red" id="bday"></span>
+        <p class="butt" style="text-align: center">
+            <label>Birthday <input id="birthday" name="birthday" type="date"/>
+                <span class="error" id="bday"></span>
+            </label><br>
         </p>
-        <p>Номер телефону <input id="phonenumber" name="phonenumber" type="tel"/>
-            <span style="color:red" id="numb"></span>
+        <p class="butt" style="text-align: center">
+            <label>Phone number <input id="phonenumber" name="phonenumber" type="tel" placeholder="Phone number"/>
+                <span class="error" id="numb"></span>
+            </label><br>
         </p>
-        <p>E-mail <input id="useremail" name="useremail" type="email"/>
-            <span style="color:red" id="email"></span>
+        <p class="butt" style="text-align: center">
+            <label>E-mail <input id="useremail" name="useremail" type="email" placeholder="E-mail"/>
+                <span class="error" id="email"></span>
+            </label><br>
         </p>
-        <p>Пароль <input id="password" name="password" type="password"/>
-            <span style="color:red" id="pass"></span>
-        </p>
-        <!--<p>Повторіть пароль <input id="password1" name="password1" type="password"/>
-            <span style="color:red" id="pass1"></span>
-        </p>-->
-        <button class="submit" type="button" onclick="send(); return false;"> Зареєструвати</button>
+        <p class="butt" style="text-align: center">
+            <label>Password <input id="password" name="password" type="password" placeholder="Password"/>
+                <span class="error" id="pass"></span>
+            </label><br>
+        </p><br><br>
+        <span style="justify-content: center;display: flex;">
+            <button class="submit" type="button" onclick="send(); return false;"> Sing Up</button>
+        </span>
     </form>
 </div>
 
@@ -72,7 +82,7 @@
                         window.location = 'http://0.0.0.0:4567/';
                     },
                     500: function () {
-                        alert('Помилка серверу! ');
+                        alert('Internal server error! ');
                     }
                 }
             });
@@ -86,7 +96,7 @@
         $('#myForm input').each(function () {
             if ($(this).val() == '') {
                 valid = false;
-                $(this).next().html('Заповніть поле!');
+                $(this).next().html('Fill in the field!');
             } else {
                 $(this).next().html('');
             }

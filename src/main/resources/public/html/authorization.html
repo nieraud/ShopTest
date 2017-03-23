@@ -1,84 +1,85 @@
 <html lang="en" ng-app="authApp">
 <head>
-    <title>Вхід</title>
+    <title>Log In</title>
     <link rel="stylesheet" type="text/css" href="../styles/style.css">
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
 
 <div class="container" ng-controller="ctrl">
     <form name="auth" ng-submit="submitMyForm()">
-        <div>
-            <p style="background-color: rgba(148, 169, 125, 0.34) ">Вхід</p>
-        </div>
-        <p><label for="useremail">E-mail </label>
-            <input id="useremail" name="useremail" type="email" ng-model="fields.useremail"/></p>
+        <span class="singUp">Log In</span><br><br><br>
+        <p class="butt" style="text-align: center"><label for="useremail">E-mail </label>
+            <input id="useremail" name="useremail" type="email" ng-model="fields.useremail" placeholder="E-mail"/>
+        </p>
 
-        <p><label for="password">Пароль </label>
-            <input id="password" name="password" type="password" ng-model="fields.password"/></p>
+        <p class="butt" style="text-align: center"><label for="password">Password </label>
+            <input id="password" name="password" type="password" ng-model="fields.password" placeholder="Password"/>
+        </p><br>
 
-        <p><label>Увійти як адміністратор
-            <input ng-model="check.admin" class="checkbox" value="false" type="checkbox"
-                   ng-init="check.admin=false"/></label></p>
-
-        <button class="submit" type="submit"> Увійти</button>
+        <p style="text-align: left">
+            <input id="c1" ng-model="check.admin" class="checkbox" type="checkbox" ng-init="check.admin=false"/>
+            <label for="c1">Log in as admin</label>
+        </p><br>
+        <span style="justify-content: center;display: flex;">
+            <button class="submit" type="submit"> Log In</button>
+        </span>
     </form>
 </div>
 </body>
 <script>
-    var app = angular.module('authApp', []);
-    app.controller('ctrl', function ($scope, $http, $window, $cookies ) {
-        $scope.submitMyForm = function () {
-            var url;
-            var checkbox = $scope.check.admin;
-            if (checkbox) {
-                url = "http://0.0.0.0:4567/auth/adm";
-            } else url = "http://0.0.0.0:4567/auth";
+    var app = angular.module('authApp', ['ngCookies']);
+    app.controller('ctrl',
+            ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
 
-            var data = angular.toJson($scope.fields);
-
-            $http({
-                method: "POST",
-                url: url,
-                dataType: 'json',
-                data: data
-            }).then(function success(response) {
-
-                var res = response.data.toString();
-
-                if (url.indexOf('adm') !== -1) {
-                    if (res.indexOf('UnauthorizedException') !== -1)
-                        alert("admin Неправильний email або пароль!");
-                    else if (res.indexOf('NotAdminException') !== -1)
-                        alert("Ви не адміністратор!");
-                    else {
-                        addCookies(response.headers('Authorization'));
-                        $window.location.href = '/html/admin/home.html';
-                    }
-                } else {
-                    if (res.indexOf('UnauthorizedException') !== -1)
-                        alert("Неправильний email або пароль!");
-                    else {
-                        addCookies(response.headers('Authorization'));
-                        $window.location.href = '/html/home.html';
-                    }
+                if ($cookies.get('token').indexOf('$2a$10$') != -1) {
+                    $window.location.href = '/html/home.html';
                 }
-            }, function exception(response) {
-                console.log("ERROR = " + response.statusText);
-                alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
-            });
-        };
-        function addCookies(token) {
-            //set cookie
-            $cookies.put('token', token);
-            //get cookie
-            //var token = $cookies.get('token');
-            //remove token
-            //$cookies.remove('token');
 
-           // $window.sessionStorage.setItem('userInfo-token', token);
-        }
-        //addCookies.$inject=['$cookies'];
-    });
+                $scope.submitMyForm = function () {
+                    var url;
+                    var checkbox = $scope.check.admin;
+                    if (checkbox) {
+                        url = "http://0.0.0.0:4567/auth/adm";
+                    } else url = "http://0.0.0.0:4567/auth";
+
+                    var data = angular.toJson($scope.fields);
+
+                    $http({
+                        method: "POST",
+                        url: url,
+                        dataType: 'json',
+                        data: data
+                    }).then(function success(response) {
+
+                        var res = response.data.toString();
+
+                        if (url.indexOf('adm') !== -1) {
+                            if (res.indexOf('UnauthorizedException') !== -1)
+                                alert("admin Неправильний email або пароль!");
+                            else if (res.indexOf('NotAdminException') !== -1)
+                                alert("Ви не адміністратор!");
+                            else {
+                                $cookies.put('token', response.headers('Authorization'));
+                                $cookies.put('admin', 'true');
+                                $window.location.href = '/html/home.html';
+                            }
+                        } else {
+                            if (res.indexOf('UnauthorizedException') !== -1)
+                                alert("Неправильний email або пароль!");
+                            else {
+                                $cookies.put('token', response.headers('Authorization'))
+                                $cookies.put('admin', 'false');
+                                $window.location.href = '/html/home.html';
+                            }
+                        }
+                    }, function exception(response) {
+                        console.log("ERROR = " + response.statusText);
+                        alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
+                    });
+                };
+            }]);
+
 </script>
 </html>

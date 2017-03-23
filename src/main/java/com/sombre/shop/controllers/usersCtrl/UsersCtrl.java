@@ -71,18 +71,19 @@ public class UsersCtrl {
         if (userFromDB == null) return new UnauthorizedException();
 
         if (UserSecurity.checkPassword(user.getPassword(), userFromDB.getHashpassword())) {
-            String accessToken = userDaoService.getAccessTokenByUserId(userFromDB.getUniqueid());
-            if(accessToken == null) {
-                accessToken =  UserSecurity.generateAccessToken(userFromDB);
-                userDaoService.authorization(accessToken, userFromDB.getUniqueid());
+
+            String accessToken = UsersCtrl.getUserDaoService().getAccessTokenByUserId(userFromDB.getUniqueid());
+
+            if (accessToken == null) {
+                accessToken = UserSecurity.generateAccessToken(userFromDB);
+                UsersCtrl.getUserDaoService().authorization(accessToken, userFromDB.getUniqueid());
             }
+
             request.session(true);
             request.session().attribute("AccessToken", accessToken);
 
             response.header(HttpHeader.AUTHORIZATION.asString(), accessToken);
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.redirect("html/home.html");
             return response;
         } else return new UnauthorizedException();
     };

@@ -51,17 +51,4 @@ SELECT *
 FROM blacklist;
 
 
-
-
-SELECT
-  blacklist.uniqueid,
-  blacklist.notes,
-  blacklist.dateadded,
-  blacklist.id_user,
-  users.firstname,
-  users.lastname,
-  blacklist.id_adminadded
-FROM blacklist
-  INNER JOIN users ON blacklist.id_user = users.uniqueid
-  INNER JOIN admins ON blacklist.id_adminadded = admins.uniqueid
-WHERE blacklist.uniqueid = 'ed96f4df-bf7a-4967-8a6f-a0f3e9e29127';
+INSERT INTO

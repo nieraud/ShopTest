@@ -1,27 +1,43 @@
 <!DOCTYPE html >
-<html lang="en" ng-app="adminHome">
+<html lang="en" ng-app="home">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
 
-<div>
+<div ng-controller="ctrl">
     <ul>
-        <li ng-repeat="user in bla.products"> {{ products.name }}</li>
+        <li ng-repeat="item in items">
+            {{item}}
+        </li>
     </ul>
 </div>
 <script>
-    app.controller('prCtrl', ['$scope', 'NFactory', function ($scope, NFactory) {
-        alert("here??");
-        $scope.bla = NFactory.query;
-        alert("here??" + $scope.bla);
+    var app = angular.module('home', ['ngCookies']);
+    app.controller('ctrl',
+            ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
 
-        NFactory.get({}, function (nFactory) {
-            $scope.allposts = nFactory.firstname;
-        })
-    }]);
+                alert("hello");
+
+                var cookie = $cookies.get('token');
+                if(cookie != null )
+                        alert("cookie is = " + cookie);
+                else alert("cookie is not :(");
+                /* $scope.items = $http({
+                 method: "GET",
+                 url: "http://0.0.0.0:4567/sec/product/all"
+                 }).then(function success(response) {
+                 console.log("SUCCESS = " + response.statusText);
+                 }, function exception(response) {
+                 console.log("ERROR = " + response.statusText);
+                 alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
+                 });*/
+
+                //{{$index + 1}}.Name: {{member.username }} | Address: {{ member.address}}
+            }]);
 </script>
 </body>
 </html>
