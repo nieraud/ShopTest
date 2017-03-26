@@ -26,17 +26,27 @@ public class BeforeFilter {
     }
 
     @Getter
+    private static final Filter checkSession = (request, response) -> {
+
+    };
+
+    @Getter
     private static final Filter checkAuthorizationAndBlacklist = (request, response) -> {
 
-        Users user = getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
-        if (user == null) {
+        if (request.headers(HttpHeader.AUTHORIZATION.asString()) == null)
             halt(401, "Exception: You are unauthorized user!");
+
+        Users user = getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
+        if (user == null)
+            halt(401, "Exception: You are unauthorized user! user==null");
+
+        if (!request.session().attribute("AccessToken").equals(request.headers(HttpHeader.AUTHORIZATION.asString()))) {
+            halt(401, "Exception: Please, login to your account!");
         }
 
         if (BlacklistCtrl.getBlacklistDaoService()
-                .getFILTERBlacklistByUserId(user.getUniqueid()) != null) {
+                .getFILTERBlacklistByUserId(user.getUniqueid()) != null)
             halt(401, "Exception: Administrators added your account to blacklist.");
-        }
     };
 
     @Getter

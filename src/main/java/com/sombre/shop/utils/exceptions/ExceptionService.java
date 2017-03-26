@@ -27,6 +27,8 @@ public class ExceptionService implements ExceptionRouting {
 
         exception(UnauthorizedException.class, Handler.getUnauthorizedException());
 
+        exception(Exception.class, Handler.getException());
+
       /*  exception(NullPointerException.class, (exception, request, response) -> {
             response.type("application/json");
             response.status(404);

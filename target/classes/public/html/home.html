@@ -5,23 +5,23 @@
     <title>SombraShop</title>
     <link rel="stylesheet" type="text/css" href="../styles/homeStyle.css">
 </head>
-<body ng-controller="checkCookieCtrl">
+<body ng-controller="ctrlSombra">
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
 
-<div class="toolBar" ng-controller="ctrlSombra">
+<div class="toolBar">
     <span class="sombra">Sombra Shop</span>
-    <input class="search" placeholder="Search" type="text"/>
+    <input ng-model="searchModel" ng-model-instant class="search" placeholder="Search" type="text"/>
     <select>
         <option>All Categories</option>
         <option>Category 1</option>
     </select>
-    <button class="submit">Go</button>
+    <button class="submit" ng-click="goSearch()">Go</button>
 
     <span class="rightToolBox">
         <button ng-click="logOutCtrl()" class="submit">Log Out</button>
-        <button class="admin-{{adminBool}}">Management</button>
+        <button class="admin-{{adminBool}}" ng-click="goToManagement()">Management</button>
         <select>
             <option>Languages</option>
             <option>Ukrainian</option>
@@ -69,41 +69,70 @@
 <script>
     var app = angular.module('sombraApp', ['ngCookies']);
 
-    app.controller('checkCookieCtrl',
-            ['$scope', '$window', '$cookies', function ($scope, $window, $cookies) {
-
-                if ($cookies.get('token').indexOf('$2a$10$') == -1)
-                    $window.location.href = '/html/authorization.html';
-
-            }]);
-
     app.controller('ctrlSombra',
             ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
 
-                $scope.adminBool = $cookies.get('admin').indexOf('true') !== -1;
+                var token = $cookies.get('token');
+                if (token == null || token == "" || token.indexOf('$2a$10$') == -1) {
+                    $window.location.href = "/html/authorization.html";
+                }
+
+                $scope.adminBool = $cookies.get('adminId') != null;
+
+                /* $scope.items = $http({
+                 method: "GET",
+                 url: "http://0.0.0.0:4567/sec/product/all",
+                 headers: {
+                 'Authorization': $cookies.get('token')
+                 }
+                 }).then(function success(response) {
+                 console.log("SUCCESS = " + response.statusText);
+                 }, function exception(response) {
+                 console.log("ERROR = " + response.statusText);
+                 alert("Server error!");
+                 });*/
+
 
                 $scope.logOutCtrl = function () {
                     $cookies.put('token', null);
-                    if ($scope.adminBool)
-                        $cookies.put('admin', null);
-                    $window.location.href = '/html/index.html';
+                    $cookies.put('adminId', null);
+                    $cookies.put('userId', null);
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/logout",
+                        headers: {
+                            'Authorization': $cookies.get('token')
+                        }
+                    }).then(function success(response) {
+                        console.log("SUCCESS = " + response.statusText);
+                        $window.location.href = '/html/index.html';
+                    }, function exception(response) {
+                        console.log("ERROR = " + response);
+                    });
+
                 };
 
+                /*$scope.goSearch = function () {
+                 $scope.items = $http({
+                 method: "GET",
+                 url: "http://0.0.0.0:4567/sec/product/" + $scope.searchModel,
+                 headers: {
+                 'Authorization': $cookies.get('token')
+                 }
+                 }).then(function success(response) {
+                 console.log("SUCCESS = " + response.statusText);
+                 }, function exception(response) {
+                 console.log("ERROR = " + response.statusText);
+                 alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
+                 });
+                 };*/
 
-                $scope.items = $http({
-                    method: "GET",
-                    url: "http://0.0.0.0:4567/sec/product/all",
-                    headers: {
-                        'Authorization': $cookies.get('token')
-                    }
-                }).then(function success(response) {
-                    console.log("SUCCESS = " + response.statusText);
-                }, function exception(response) {
-                    console.log("ERROR = " + response.statusText);
-                    alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
-                });
+                $scope.goToManagement = function () {
+                    if ($scope.adminBool)
+                        $window.location.href = '/html/admin/home.html';
+                }
 
-
-            }]);
+            }
+            ]);
 </script>
 </html>

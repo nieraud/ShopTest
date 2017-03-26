@@ -1,43 +1,332 @@
 <!DOCTYPE html >
-<html lang="en" ng-app="home">
+<html lang="en" ng-app="adminHomeApp">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="../admin/styles/adminStyle.css">
 </head>
-<body>
+<body ng-controller="checkCtrl">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-cookies.js"></script>
 
-<div ng-controller="ctrl">
-    <ul>
-        <li ng-repeat="item in items">
-            {{item}}
-        </li>
-    </ul>
+<div ng-controller="fullCtrl">
+    <div class="toolBar" ng-controller="topCtrl">
+        <button class="sombra" ng-click="goToHome()">Sombra Shop</button>
+        <span class="adminHello">Welcome back, {{admin}}!</span>
+    <span class="rightToolBox">
+        <button ng-click="logOut()" class="submit-false">Log Out</button>
+        <select>
+            <option>Languages</option>
+            <option>Ukrainian</option>
+            <option>English</option>
+        </select>
+    </span>
+        <br>
+        <span class="adminStyle">Administration</span>
+    </div>
+    <div class="all">
+        <button class="submit-{{selectProfile}}" ng-click="myProfile()">My profile</button>
+        <button class="submit-{{selectOrders}}" ng-click="getOrders()">Orders</button>
+        <button class="submit-{{selectBlacklist}}" ng-click="getBlacklist()">Blacklist</button>
+        <button class="submit-{{selectAdministr}}" ng-click="administration()">Administration</button>
+        <button class="submit-{{selectCustomers}}" ng-click="customers()">Customers</button>
+    </div>
+
+    <div class="big-all">
+        <!-- My profile-->
+        <div ng-hide="hideProfile">
+            <div class="adminName">
+                <span class="text">{{firstname}} {{lastname}}</span>
+            </div>
+            <div class="big-all">
+                <span class="text">
+                    Degree: <span class="contain"> {{degree}}</span>
+                    <span class="big-all-right">
+                        Date added: {{dateadded | date:'medium'}}
+                    </span><br><br>
+                    Role: {{role}}
+                    <br><br><br>
+                    Phone number: <span class="contain">{{phone}}</span><br><br>
+                    Email: <span class="contain">{{email}}</span><br><br>
+                    Date registration: <span class="contain">{{datereg | date:'medium'}}</span><br><br>
+                    Birthday: <span class="contain">{{birthday}}</span>
+                </span>
+            </div>
+        </div>
+        <!-- Orders -->
+        <div ng-hide="hideOrders">
+            <span class="text">
+                Orders
+            </span>
+        </div>
+        <!-- Blacklist -->
+        <div ng-hide="hideBlacklist">
+            <ul>
+                <li ng-repeat="user in blacklist">
+                    <div class="big-all" >
+                        <button class="invisibleButton" ng-click="getFullBlacklist(user.uniqueid)">
+                            <span class="text" >
+                               Name: <span class="contain">{{user.firstname}} {{user.lastname}}</span><br><br>
+                               Note: <span class="contain"> {{user.notes}}</span><br><br>
+                                <a href="#" ng-click="showDetails = ! showDetails">Details</a>
+                                <a href="#" ng-click="deleteFromBlacklist(user.uniqueid)">Delete</a>
+                           </span>
+                        </button>
+                        <div class="text" ng-show="showDetails">
+                            <br>The administrator added user to the blacklist:
+                            <span class="contain">{{adminFirstName}} {{adminLastName}}</span><br><br>
+                            Date added: <span class="contain">{{user.dateadded.iMillis | date:'medium'}}</span>
+                        </div>
+                        <br>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- Administration -->
+        <div ng-hide="hideAdministr">
+             <span class="text">
+                 Administration
+             </span>
+        </div>
+        <!-- Customers -->
+        <div ng-hide="hideCustomers">
+             <span class="text">
+                 Customers
+             </span>
+        </div>
+    </div>
+    <div class="all">
+        Setting
+    </div>
 </div>
 <script>
-    var app = angular.module('home', ['ngCookies']);
-    app.controller('ctrl',
+    var app = angular.module('adminHomeApp', ['ngCookies']);
+
+    app.controller('checkCtrl',
+            ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
+                //check auth
+                var token = $cookies.get('token');
+                if (token == null || token == "" || token.indexOf('$2a$10$') == -1) {
+                    $window.location.href = "/html/authorization.html";
+                }
+                //check admin
+                var admin = $cookies.get('adminId');
+                if (admin == null || admin == "") {
+                    $window.location.href = "/html/home.html";
+                } else {
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/sec/admin/" + $cookies.get('adminId'),
+                        headers: {'Authorization': $cookies.get('token')}
+                    }).then(function success(response) {
+                        //Welcome back, <response.data.firstname>!;
+                        $scope.admin = response.data.firstname;
+
+                        $scope.firstname = response.data.firstname;
+                        $scope.lastname = response.data.lastname;
+                        $scope.dateadded = response.data.dateadded.iMillis;
+                        $scope.degree = response.data.degree;
+                        $scope.role = response.data.roledescription;
+                        $scope.birthday = response.data.birthday;
+                        $scope.phone = response.data.phonenumber;
+                        $scope.email = response.data.useremail;
+                        $scope.datereg = response.data.datereg.iMillis;
+
+                        if (response.data.toString().indexOf('NotAdminException') !== -1)
+                            $window.location.href = "/html/home.html";
+                    }, function exception(response) {
+                        console.log('ERROR = ' + response);
+                        alert('Server error!');
+                    });
+                }
+            }]);
+
+    app.controller('fullCtrl',
             ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
 
-                alert("hello");
+                $scope.selectProfile = true;
+                $scope.hideProfile = false;
 
-                var cookie = $cookies.get('token');
-                if(cookie != null )
-                        alert("cookie is = " + cookie);
-                else alert("cookie is not :(");
-                /* $scope.items = $http({
-                 method: "GET",
-                 url: "http://0.0.0.0:4567/sec/product/all"
-                 }).then(function success(response) {
-                 console.log("SUCCESS = " + response.statusText);
-                 }, function exception(response) {
-                 console.log("ERROR = " + response.statusText);
-                 alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
-                 });*/
+                $scope.selectOrders = false;
+                $scope.hideOrders = true;
 
-                //{{$index + 1}}.Name: {{member.username }} | Address: {{ member.address}}
+                $scope.selectBlacklist = false;
+                $scope.hideBlacklist = true;
+
+                $scope.selectAdministr = false;
+                $scope.hideAdministr = true;
+
+                $scope.selectCustomers = false;
+                $scope.hideCustomers = true;
+
+                $scope.myProfile = function () {
+                    //true
+                    $scope.selectProfile = true;
+                    $scope.hideProfile = false;
+
+                    //false
+                    $scope.selectOrders = false;
+                    $scope.hideOrders = true;
+
+                    $scope.selectBlacklist = false;
+                    $scope.hideBlacklist = true;
+
+                    $scope.selectAdministr = false;
+                    $scope.hideAdministr = true;
+
+                    $scope.selectCustomers = false;
+                    $scope.hideCustomers = true;
+                };
+                $scope.getBlacklist = function () {
+                    //true
+                    $scope.selectBlacklist = true;
+                    $scope.hideBlacklist = false;
+
+                    //false
+                    $scope.selectProfile = false;
+                    $scope.hideProfile = true;
+
+                    $scope.selectOrders = false;
+                    $scope.hideOrders = true;
+
+                    $scope.selectAdministr = false;
+                    $scope.hideAdministr = true;
+
+                    $scope.selectCustomers = false;
+                    $scope.hideCustomers = true;
+
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/sec/admin/blacklist/",
+                        headers: {
+                            'Authorization': $cookies.get('token')
+                        }
+                    }).then(function success(response) {
+                        console.log(response.data);
+                        $scope.blacklist = response.data;
+                    }, function exception(response) {
+                        console.log("ERROR = " + response);
+                    });
+                };
+                $scope.getOrders = function () {
+                    //true
+                    $scope.selectOrders = true;
+                    $scope.hideOrders = false;
+
+                    //false
+                    $scope.selectProfile = false;
+                    $scope.hideProfile = true;
+
+                    $scope.selectBlacklist = false;
+                    $scope.hideBlacklist = true;
+
+                    $scope.selectAdministr = false;
+                    $scope.hideAdministr = true;
+
+                    $scope.selectCustomers = false;
+                    $scope.hideCustomers = true;
+                };
+                $scope.administration = function () {
+                    //true
+                    $scope.selectAdministr = true;
+                    $scope.hideAdministr = false;
+
+                    //false
+                    $scope.selectProfile = false;
+                    $scope.hideProfile = true;
+
+                    $scope.selectBlacklist = false;
+                    $scope.hideBlacklist = true;
+
+                    $scope.selectOrders = false;
+                    $scope.hideOrders = true;
+
+                    $scope.selectCustomers = false;
+                    $scope.hideCustomers = true;
+                };
+                $scope.customers = function () {
+                    //true
+                    $scope.selectCustomers = true;
+                    $scope.hideCustomers = false;
+
+                    //false
+                    $scope.selectProfile = false;
+                    $scope.hideProfile = true;
+
+                    $scope.selectBlacklist = false;
+                    $scope.hideBlacklist = true;
+
+                    $scope.selectOrders = false;
+                    $scope.hideOrders = true;
+
+                    $scope.selectAdministr = false;
+                    $scope.hideAdministr = true;
+                };
+
+                //blacklist, FULL one user
+                $scope.getFullBlacklist = function (uuid) {
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/sec/admin/blacklist/" + uuid,
+                        headers: {
+                            'Authorization': $cookies.get('token')
+                        }
+                    }).then(function success(response) {
+                        $scope.adminFirstName = response.data.adminFirstName;
+                        $scope.adminLastName = response.data.adminLastName;
+                    }, function exception(response) {
+                        console.log("ERROR = " + response);
+                    });
+                }
+                $scope.deleteFromBlacklist = function (uuid) {
+                    $http({
+                        method: "DELETE",
+                        url: "http://0.0.0.0:4567/sec/admin/blacklist/" + uuid,
+                        headers: {
+                            'Authorization': $cookies.get('token')
+                        }
+                    }).then(function success(response) {
+                        if (response.data.indexOf('spark') != -1)
+                            $scope.hideDeletedFromBlocklist = true;
+                        else console.log("error");
+                    }, function exception(response) {
+                        console.log("ERROR = " + response);
+                    });
+                }
+
+
             }]);
+
+    app.controller('topCtrl',
+            ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
+
+
+                $scope.goToHome = function () {
+                    $window.location.href = '/html/home.html';
+                };
+
+                $scope.logOut = function () {
+                    $cookies.put('token', null);
+                    $cookies.put('adminId', null);
+                    $cookies.put('userId', null);
+
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/logout",
+                        headers: {
+                            'Authorization': $cookies.get('token')
+                        }
+                    }).then(function success(response) {
+                        console.log("SUCCESS = " + response.statusText);
+                    }, function exception(response) {
+                        console.log("ERROR = " + response.statusText);
+                        alert("Server error!");
+                    });
+
+                    $window.location.href = '/html/index.html';
+                };
+            }]);
+
 </script>
 </body>
 </html>

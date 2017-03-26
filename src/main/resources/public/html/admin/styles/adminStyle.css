@@ -1,0 +1,199 @@
+html{
+    background-color: #b1c0ca;
+}
+html ::selection {
+    background: #989898; /* Safari */
+}
+::-moz-selection {
+    background: #989898; /* Firefox */
+}
+
+/*toolbar*/
+.toolBar {
+    background-color: rgb(234, 234, 234);
+    box-shadow: 0 0 10px rgb(36, 36, 36);
+    border-radius: 20px;
+    height: 55px;
+    padding: 10px;
+    margin: 1px;
+}
+.adminStyle{
+    color: rgb(61, 61, 61);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    padding-left: 60px;
+}
+
+.adminHello{
+    color: rgb(61, 61, 61);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    padding-left: 60px;
+}
+
+.sombra{
+    color: rgb(102, 102, 102);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+    background: none;
+    border: none;
+}
+
+.invisibleButton{
+    text-align: left;
+    background: none;
+    border: none;
+    width: auto;
+    height: auto;
+}
+.rightToolBox{
+    margin-top:8px;
+    height: 30px;
+    float: right;
+}
+
+.submit-true {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 15px;
+    color: rgb(234, 234, 234);
+    background-color: rgba(39, 39, 39, 0.92);
+    border: none;
+    font-size: inherit;
+    box-shadow: 0 0 5px rgba(11, 0, 7, 0.9);
+    text-shadow: 2px 2px 3px rgba(117, 117, 117, 0.98);
+}
+
+.submit-false {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 4px 15px;
+    color: rgb(61, 61, 61);
+    background-color: rgba(170, 170, 170, 0.32);
+    border: none;
+    font-size: inherit;
+    box-shadow: 0 0 5px rgba(11, 0, 7, 0.9);
+    text-shadow: 2px 2px 3px rgba(117, 117, 117, 0.98);
+
+}
+
+li{
+    list-style-type: none;
+}
+
+select {
+    -webkit-border-radius: 5px;
+    -webkit-padding-end: 50px;
+    -webkit-padding-start: 5px;
+    -webkit-user-select: none;
+    color: rgb(61, 61, 61);
+    background-color: rgba(170, 170, 170, 0.32);
+    border: none;
+    font-size: inherit;
+    overflow: hidden;
+    padding: 4px 10px;
+    margin: 0 10px;
+    width: 150px;
+    box-shadow: 0 0 5px rgba(11, 0, 7, 0.9);
+    text-shadow: 2px 2px 3px rgba(117, 117, 117, 0.98);
+}
+
+select option{
+    color: rgb(61, 61, 61);
+    background-color: rgba(170, 170, 170, 0.32);
+    text-shadow: 2px 2px 3px rgba(117, 117, 117, 0.98);
+}
+/*end toolbar*/
+
+
+/*navigation*/
+.all{
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 0 10px rgba(29, 29, 29, 0.85);
+    border-radius: 20px;
+    height: 45px;
+    padding: 10px;
+    margin-top: 15px;
+}
+/*end navigation*/
+
+.big-all{
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 0 10px rgba(29, 29, 29, 0.85);
+    border-radius: 20px;
+    height: auto;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+.big-all-right{
+    background-color: rgb(241, 241, 241);
+    box-shadow: 0 0 10px rgba(29, 29, 29, 0.85);
+    border-radius: 20px;
+    height: auto;
+    padding: 10px;
+    margin-top: 15px;
+    display: inline;
+    float: right;
+}
+
+.adminName{
+    background-color: rgb(198, 198, 198);
+    box-shadow: 0 0 10px rgba(15, 15, 15, 0.9);
+    border-radius: 20px;
+    height: auto;
+    width: 400px;
+    padding: 10px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.text{
+    color: rgb(61, 61, 61);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+.contain{
+    background-color: rgb(198, 198, 198);
+    box-shadow: 0 0 10px rgba(29, 29, 29, 0.85);
+    border-radius: 20px;
+    height: auto;
+    padding: 4px;
+    margin-top: 5px;
+}
+
+a:link, a:visited {
+    background-color: #8181a3;
+    box-shadow: 0 0 10px rgba(60, 60, 76, 0.85);
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+/*
+.animate-show-hide.ng-hide {
+    opacity: 0;
+}
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+    transition: all linear 0.5s;
+}
+
+.check-element {
+    border: 1px solid black;
+    opacity: 1;
+    padding: 10px;
+}*/

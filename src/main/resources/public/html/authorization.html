@@ -33,9 +33,24 @@
     app.controller('ctrl',
             ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
 
-                if ($cookies.get('token').indexOf('$2a$10$') != -1) {
-                    $window.location.href = '/html/home.html';
-                }
+              /*  var token = $cookies.get('token');
+                if (token != null && token != "" && token.indexOf('$2a$10$') != -1) {
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/sec/admin/" + $cookies.get('adminId'),
+                        headers: {'Authorization': $cookies.get('token')}
+                    }).then(function success(response) {
+                        //Welcome back, <response.data.firstname>!;
+                        $scope.admin = response.data.firstname;
+
+                        if (response.data.toString().indexOf('NotAdminException') !== -1)
+                            $window.location.href = "/html/home.html";
+                    }, function exception(response) {
+                        console.log('ERROR = ' + response);
+                        alert('Server error!');
+                    });
+                    $window.location.href = "/html/home.html";
+                }*/
 
                 $scope.submitMyForm = function () {
                     var url;
@@ -62,21 +77,23 @@
                                 alert("Ви не адміністратор!");
                             else {
                                 $cookies.put('token', response.headers('Authorization'));
-                                $cookies.put('admin', 'true');
+                                $cookies.put('adminId', response.headers('AdminId'));
+                                $cookies.put('userId', response.headers('UniqueId'));
                                 $window.location.href = '/html/home.html';
                             }
                         } else {
                             if (res.indexOf('UnauthorizedException') !== -1)
-                                alert("Неправильний email або пароль!");
+                                alert("Not correct email or password!");
                             else {
-                                $cookies.put('token', response.headers('Authorization'))
-                                $cookies.put('admin', 'false');
+                                $cookies.put('token', response.headers('Authorization'));
+                                $cookies.put('adminId', null);
+                                $cookies.put('userId', response.headers('UniqueId'));
                                 $window.location.href = '/html/home.html';
                             }
                         }
                     }, function exception(response) {
                         console.log("ERROR = " + response.statusText);
-                        alert("Промилка серверу, обновіть сторінку і спробуйте ще раз!");
+                        alert("Server error!");
                     });
                 };
             }]);

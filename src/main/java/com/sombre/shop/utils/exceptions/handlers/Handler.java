@@ -36,31 +36,38 @@ public class Handler {
 
     @Getter
     private static final ExceptionHandler sql2oException = ((e, request, response) -> {
-        response.body("Помилка серверу. Інф: Sql2o");
+        response.body(e.getLocalizedMessage());
         response.type("application/json");
         response.status(500);
     });
 
     @Getter
     private static final ExceptionHandler parseException = ((e, request, response) -> {
-        response.body("Помилка серверу. Інф: Parse");
+        response.body(e.getLocalizedMessage());
         response.type("application/json");
         response.status(500);
     });
 
     @Getter
     private static final ExceptionHandler unauthorizedException = ((e, request, response) -> {
-        response.body("Помилка серверу. Інф: Unauthorized");
+        response.body(e.getLocalizedMessage());
         response.type("application/json");
         response.status(401);
     });
 
     @Getter
     private static final ExceptionHandler notAdminException = ((e, request, response) -> {
-        response.body("Помилка серверу. Інф: NotAdmin");
+        response.body(e.getLocalizedMessage());
         response.type("application/json");
         response.status(60);
     });
+
+    @Getter
+    private static final ExceptionHandler exception = (e, request, response) -> {
+        response.body(e.getLocalizedMessage());
+        response.type("application/json");
+        response.status(500);
+    };
 
 
 }

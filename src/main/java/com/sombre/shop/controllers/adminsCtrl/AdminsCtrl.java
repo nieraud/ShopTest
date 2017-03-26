@@ -59,21 +59,11 @@ public class AdminsCtrl {
             request.session().attribute("AccessToken", accessToken);
 
             response.header(HttpHeader.AUTHORIZATION.asString(), accessToken);
+            response.header("AdminId", adminFromDB.getUniqueid().toString());
+            response.header("UniqueId", userFromDB.getUniqueid().toString());
             response.status(HttpStatus.OK_200);
             return response;
         } else return new UnauthorizedException();
-    };
-
-    @Getter
-    private static Route singOut = (request, response) -> {
-
-        request.session().attribute("AccessToken", null);
-
-        response.header(HttpHeader.AUTHORIZATION.asString(), null);
-        response.status(HttpStatus.OK_200);
-        response.type("application/json");
-        response.redirect("/htmlindex.html");
-        return null;
     };
 
     @Getter
@@ -84,9 +74,7 @@ public class AdminsCtrl {
         if (adminDaoService.addAdmin(newAdmin)) {
 
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(response.body());
+            return response;
         } else throw new Exception();
     };
 
@@ -98,9 +86,7 @@ public class AdminsCtrl {
         if (adminDaoService.updateAdmin(admin)) {
 
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(response.body());
+            return response;
         } else throw new Exception();
     };
 
@@ -111,15 +97,13 @@ public class AdminsCtrl {
 
         if (adminDaoService.deleteAdmin(admin.getUniqueid())) {
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(response.body());
+            return response;
         } else throw new Exception();
     };
 
     @Getter
     private static final Route admin = (request, response) -> {
-        //UniqueIdDto admin = gson.fromJson(request.body(), UniqueIdDto.class);
+
         UUID adminId = UUID.fromString(request.params("id"));
         ObjectConverterValidator.nullChecker(adminId);
 
@@ -128,21 +112,39 @@ public class AdminsCtrl {
         if (adminFromDb != null) {
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            return response;
-        } else throw new NullPointerException();
+            return gson.toJson(adminFromDb);
+        } else throw new NotAdminException();
     };
 
     @Getter
     private static final Route allAdmins = (request, response) -> {
 
-        List<GetAdminDto> adminFromDb = adminDaoService.getAllAdmins();
+        List<GetAdminDto> adminsFromDb = adminDaoService.getAllAdmins();
 
-        if (!adminFromDb.isEmpty()) {
+        if (!adminsFromDb.isEmpty()) {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
-            return response;
+            return gson.toJson(adminsFromDb);
         } else throw new NullPointerException();
     };
+
+   /* @Getter
+    private static final Route adminByToken = (request, response) -> {
+
+        if(request.headers(HttpHeader.AUTHORIZATION.asString()) == null) throw new UnauthorizedException();
+
+        Users user = UsersCtrl.getUserDaoService().getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
+        if (user == null) throw new UnauthorizedException();
+
+        Admins admin = adminDaoService.getAdminByUserId(user.getUniqueid());
+        if (admin != null) {
+            response.status(HttpStatus.OK_200);
+            //response.type("application/json");
+            response.body(admin.toString());
+            return response;
+        } else return null;
+
+    };*/
 
 }

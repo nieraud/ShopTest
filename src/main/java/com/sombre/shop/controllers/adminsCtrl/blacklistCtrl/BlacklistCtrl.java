@@ -20,6 +20,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by inna on 20.02.17.
@@ -40,9 +41,7 @@ public class BlacklistCtrl {
 
         if (blacklistDaoService.addUserToBlacklist(list, admin.getUniqueid())) {
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(response.body());
+            return response;
 
         } else throw new Exception();
     };
@@ -55,33 +54,30 @@ public class BlacklistCtrl {
 
         if (blacklistDaoService.updateBlackList(list)) {
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(response.body());
+            return response;
         } else throw new Exception();
     };
 
 
     @Getter
     private static Route deleteBlacklist = (request, response) -> {
-        UniqueIdDto userId = gson.fromJson(request.body(), UniqueIdDto.class);
-        ObjectConverterValidator.nullChecker(userId);
+        UUID listId = UUID.fromString(request.params("id"));
+        ObjectConverterValidator.nullChecker(listId);
 
-        if (blacklistDaoService.deleteBlacklist(userId.getUniqueid())) {
+        if (blacklistDaoService.deleteBlacklist(listId)) {
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("successfully");
-            return gson.toJson(response.body());
+            return response;
         } else throw new Exception();
     };
 
 
     @Getter
     private static Route blacklistById = (request, response) -> {
-        UniqueIdDto listId = gson.fromJson(request.body(), UniqueIdDto.class);
+
+        UUID listId = UUID.fromString(request.params("id"));
         ObjectConverterValidator.nullChecker(listId);
 
-        GetBlacklistDto blacklist = blacklistDaoService.getBlacklistById(listId.getUniqueid());
+        GetBlacklistDto blacklist = blacklistDaoService.getBlacklistById(listId);
         ObjectConverterValidator.nullChecker(blacklist);
 
         response.status(HttpStatus.OK_200);
@@ -92,10 +88,10 @@ public class BlacklistCtrl {
 
     @Getter
     private static Route blacklistByUserId = (request, response) -> {
-        UniqueIdDto userId = gson.fromJson(request.body(), UniqueIdDto.class);
+        UUID userId = UUID.fromString(request.params("userid"));
         ObjectConverterValidator.nullChecker(userId);
 
-        GetBlacklistDto blacklist = blacklistDaoService.getBlacklistByUserId(userId.getUniqueid());
+        GetBlacklistDto blacklist = blacklistDaoService.getBlacklistByUserId(userId);
         ObjectConverterValidator.nullChecker(blacklist);
 
         response.status(HttpStatus.OK_200);

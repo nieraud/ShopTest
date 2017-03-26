@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static spark.Spark.halt;
 
@@ -56,7 +57,6 @@ public class UsersCtrl {
         if (userDaoService.registration(endingUser)) {
 
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
             return response;
         } else throw new InternalError();
     };
@@ -81,8 +81,8 @@ public class UsersCtrl {
 
             request.session(true);
             request.session().attribute("AccessToken", accessToken);
-
             response.header(HttpHeader.AUTHORIZATION.asString(), accessToken);
+            response.header("UniqueId", userFromDB.getUniqueid().toString());
             response.status(HttpStatus.OK_200);
             return response;
         } else return new UnauthorizedException();
@@ -96,11 +96,19 @@ public class UsersCtrl {
         if (userDaoService.updateUser(user)) {
 
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("user updated");
-            return gson.toJson(response.body());
+            return response;
         } else throw new Exception();
-        
+
+    };
+
+    @Getter
+    private static Route logOut = (request, response) -> {
+
+        request.session().attribute("AccessToken", null);
+
+        response.header(HttpHeader.AUTHORIZATION.asString(), null);
+        response.status(HttpStatus.OK_200);
+        return response;
     };
 
     @Getter
@@ -115,9 +123,7 @@ public class UsersCtrl {
         if (userDaoService.deleteUser(user.getUniqueid())) {
 
             response.status(HttpStatus.OK_200);
-            response.type("application/json");
-            response.body("user deleted");
-            return gson.toJson(response.body());
+            return response;
 
         } else throw new Exception();
 
@@ -125,17 +131,17 @@ public class UsersCtrl {
 
     @Getter
     private static final Route userById = (request, response) -> {
-        UniqueIdDto user = gson.fromJson(request.body(), UniqueIdDto.class);
-        ObjectConverterValidator.nullChecker(user);
+        UUID userId = UUID.fromString(request.params("id"));
+        ObjectConverterValidator.nullChecker(userId);
 
-        Users userFromDb = userDaoService.getUserById(user.getUniqueid());
+        Users userFromDb = userDaoService.getUserById(userId);
         if (userFromDb != null) {
 
             response.status(HttpStatus.OK_200);
             response.type("application/json");
             return gson.toJson(userFromDb);
 
-        } else throw new NullPointerException();
+        } else throw new UnauthorizedException();
 
     };
 
@@ -149,6 +155,21 @@ public class UsersCtrl {
             return gson.toJson(users);
         } else throw new NullPointerException();
     };
+
+    /*@Getter
+    private static final Route userByToken = (request, response) -> {
+
+        if (request.headers(HttpHeader.AUTHORIZATION.asString()) == null) throw new UnauthorizedException();
+
+        Users user = userDaoService.getUserByAccessToken(request.headers(HttpHeader.AUTHORIZATION.asString()));
+        if (user != null) {
+            response.status(HttpStatus.OK_200);
+            response.type("application/json");
+            response.body(gson.toJson(user));
+            System.out.println(gson.toJson(user));
+            return response;
+        } else return null;
+    };*/
 
 
 }

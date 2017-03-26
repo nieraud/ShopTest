@@ -31,6 +31,10 @@ WHERE uniqueid = '5dde1350-2354-462d-aea5-4c77c3eae2b1';
 
 INSERT INTO admins VALUES (DEFAULT, '0fcdbe32-11ac-438d-a763-041d1ffbcfd3', 1, 'Owner');
 
+insert into blacklist VALUES (DEFAULT , 'e2bdf5ae-4378-49a0-8b01-cac45f745d0b', 'd8eabf81-c75b-4550-bb5c-70db3406719d', 'False user', DEFAULT );
+insert into blacklist VALUES (DEFAULT , '4aced2af-69ae-4756-811c-776dc65e6ab7', 'd8eabf81-c75b-4550-bb5c-70db3406719d', 'False user', DEFAULT );
+
+
 
 SELECT *
 FROM users;
@@ -51,17 +55,4 @@ SELECT *
 FROM blacklist;
 
 
-
-
-SELECT
-  blacklist.uniqueid,
-  blacklist.notes,
-  blacklist.dateadded,
-  blacklist.id_user,
-  users.firstname,
-  users.lastname,
-  blacklist.id_adminadded
-FROM blacklist
-  INNER JOIN users ON blacklist.id_user = users.uniqueid
-  INNER JOIN admins ON blacklist.id_adminadded = admins.uniqueid
-WHERE blacklist.uniqueid = 'ed96f4df-bf7a-4967-8a6f-a0f3e9e29127';
+INSERT INTO

@@ -9,6 +9,7 @@ import com.sombre.shop.controllers.productsCtrl.ProductsCtrl;
 import com.sombre.shop.controllers.subcategoriesCtrl.SubcategoriesCtrl;
 import com.sombre.shop.controllers.usersCtrl.UsersCtrl;
 import com.sombre.shop.models.pojo.entity.Admins;
+import com.sombre.shop.models.pojo.entity.Products;
 
 
 import static spark.Spark.*;
@@ -25,20 +26,21 @@ public class Router implements Routing {
         staticFiles.location("/public");
 
         //index
-        get("/", (req, res) -> {res.redirect("html/index.html");return null;});
-
-       /* post("/test", (request, response) -> {
-            System.out.println(request.body());
-            return"ok";
-        });*/
+        get("/", (req, res) -> {
+            res.redirect("html/index.html");
+            return null;
+        });
 
         post("/reg", UsersCtrl.getRegistrationUser());
 
         post("/auth/adm", AdminsCtrl.getAuthorizationAdmin());
         post("/auth", UsersCtrl.getAuthorization());
 
-        //get("/singout", UsersCtrl.getSingOut());
-        get("/singout", AdminsCtrl.getSingOut()); //(users+)
+        get("/logout", UsersCtrl.getLogOut());
+
+        //get users by token
+        //  get("/a/token",AdminsCtrl.getAdminByToken());
+        // get("/token", UsersCtrl.getUserByToken());
 
         before("/sec/*", BeforeFilter.getCheckAuthorizationAndBlacklist());
         path("/sec", () -> {
@@ -57,18 +59,18 @@ public class Router implements Routing {
                 get("/all", AdminsCtrl.getAllAdmins());
 
                 path("/user", () -> {
-                    post("/id", UsersCtrl.getUserById());
+                    get("/:id", UsersCtrl.getUserById());
                     get("/all", UsersCtrl.getAllUsers());
-
-                    path("/blacklist", () -> {
-                        post("/add", BlacklistCtrl.getAddUserToBlackList());
-                        post("/upd", BlacklistCtrl.getUpdateBlacklist());
-                        delete("/del", BlacklistCtrl.getDeleteBlacklist());
-                        post("/id", BlacklistCtrl.getBlacklistById());
-                        post("/user", BlacklistCtrl.getBlacklistByUserId());
-                        get("/", BlacklistCtrl.getAllBlacklist());
-                    });
                 });
+                path("/blacklist", () -> {
+                    post("/add", BlacklistCtrl.getAddUserToBlackList());
+                    post("/upd", BlacklistCtrl.getUpdateBlacklist());
+                    delete("/:id", BlacklistCtrl.getDeleteBlacklist());
+                    get("/:id", BlacklistCtrl.getBlacklistById());
+                    get("/:userid", BlacklistCtrl.getBlacklistByUserId());
+                    get("/", BlacklistCtrl.getAllBlacklist());
+                });
+
 
                 path("/category", () -> {
                     post("/add", CategoriesCtrl.getAddCategory());
@@ -105,6 +107,7 @@ public class Router implements Routing {
                 post("/subcategory", ProductsCtrl.getAllProductsBySubcategory());
                 post("/category", ProductsCtrl.getAllProductsByCategory());
                 get("/all", ProductsCtrl.getAllProducts());
+                //get("/:search", Products.getProductsBySearch());
             });
 
 //above

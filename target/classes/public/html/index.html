@@ -27,13 +27,33 @@
     app.controller('indexCtrl',
             ['$scope', '$http', '$window', '$cookies', function ($scope, $http, $window, $cookies) {
 
-                if ($cookies.get('token').indexOf('$2a$10$') != -1) {
-                    $window.location.href = '/html/home.html';
-                }
+               /* var token = $cookies.get('token');
+                if (token != null && token != "" && token.indexOf('$2a$10$') != -1) {
+
+                    $http({
+                        method: "GET",
+                        url: "http://0.0.0.0:4567/session",
+                        headers: {
+                            'Authorization': $cookies.get('token')
+                        }
+                    }).then(function success(response) {
+                        console.log("SUCCESS = " + response.statusText);
+
+                        if(response.data.indexOf("true"))
+                            $window.location.href = '/html/home.html';
+                        else if (response == null) alert("without cookie");
+
+                    }, function exception(response) {
+                        console.log("ERROR = " + response.statusText);
+                        alert("Server error!");
+                    });
+
+                }*/
+
 
                 $scope.goToAuth = function () {
                     $window.location.href = '/html/authorization.html'
-                }
+                };
 
                 $scope.goToReg = function () {
                     //formaction="authorization.html"
